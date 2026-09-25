@@ -1,0 +1,1670 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AgriCore AIoT</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            color: #24352b;
+            background: #f7faf5;
+        }
+
+        /* =========================
+           NAVBAR
+        ========================= */
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+
+            background: rgba(255, 255, 255, 0.96);
+            border-bottom: 1px solid #e4ebe1;
+        }
+
+        .navbar {
+            max-width: 1200px;
+            margin: auto;
+            height: 70px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 25px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            color: #27733e;
+            font-size: 21px;
+            font-weight: bold;
+        }
+
+        .logo-icon {
+            width: 38px;
+            height: 38px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+
+            background: #e6f4e6;
+            font-size: 20px;
+        }
+
+        nav {
+            display: flex;
+            gap: 28px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #53635a;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        nav a:hover {
+            color: #27733e;
+        }
+
+        .nav-button {
+            padding: 11px 18px;
+            border-radius: 6px;
+
+            background: #2f7d46;
+            color: white !important;
+        }
+
+        /* =========================
+           HERO
+        ========================= */
+
+        .hero {
+            height: 610px;
+
+            background:
+                linear-gradient(
+                    rgba(10, 45, 22, .25),
+                    rgba(10, 45, 22, .45)
+                ),
+                url("https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1800&q=85");
+
+            background-size: cover;
+            background-position: center;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            text-align: center;
+            color: white;
+
+            padding: 100px 20px 40px;
+        }
+
+        .hero-content {
+            max-width: 800px;
+        }
+
+        .hero-small {
+            font-size: 13px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+
+            margin-bottom: 18px;
+
+            color: #e5f6df;
+        }
+
+        .hero h1 {
+            font-family: Georgia, serif;
+
+            font-size: clamp(38px, 6vw, 72px);
+            line-height: 1.05;
+
+            margin-bottom: 22px;
+
+            text-shadow: 0 3px 15px rgba(0,0,0,.25);
+        }
+
+        .hero p {
+            max-width: 650px;
+            margin: auto;
+
+            font-size: 17px;
+            line-height: 1.7;
+
+            color: #f1f8ef;
+        }
+
+        .hero-buttons {
+            margin-top: 30px;
+
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+
+            flex-wrap: wrap;
+        }
+
+        .hero-button {
+            text-decoration: none;
+
+            padding: 14px 24px;
+
+            border-radius: 5px;
+
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .primary {
+            background: #3d8c4e;
+            color: white;
+        }
+
+        .secondary {
+            background: rgba(255,255,255,.9);
+            color: #315b3a;
+        }
+
+        /* =========================
+           INTRO
+        ========================= */
+
+        .intro {
+            max-width: 1050px;
+            margin: auto;
+
+            padding: 75px 25px 45px;
+
+            text-align: center;
+        }
+
+        .section-label {
+            color: #4e9459;
+            font-size: 12px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: bold;
+
+            margin-bottom: 12px;
+        }
+
+        .intro h2 {
+            font-family: Georgia, serif;
+
+            font-size: 35px;
+            color: #294934;
+
+            margin-bottom: 15px;
+        }
+
+        .intro p {
+            max-width: 720px;
+            margin: auto;
+
+            color: #6c796f;
+            line-height: 1.8;
+            font-size: 15px;
+        }
+
+        /* =========================
+           FEATURE CARDS
+        ========================= */
+
+        .features {
+            max-width: 1100px;
+            margin: auto;
+
+            padding: 15px 25px 70px;
+
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+
+            gap: 20px;
+        }
+
+        .feature-card {
+            background: white;
+
+            border: 1px solid #e4ebe1;
+
+            border-radius: 8px;
+
+            overflow: hidden;
+
+            transition: .25s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+
+            box-shadow:
+                0 12px 35px rgba(48, 94, 55, .12);
+        }
+
+        .feature-image {
+            height: 155px;
+
+            background-size: cover;
+            background-position: center;
+        }
+
+        .feature-content {
+            padding: 20px;
+        }
+
+        .feature-content h3 {
+            color: #31583a;
+            font-family: Georgia, serif;
+
+            font-size: 20px;
+
+            margin-bottom: 10px;
+        }
+
+        .feature-content p {
+            color: #738078;
+
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        /* =========================
+           LIVE AIoT SECTION
+        ========================= */
+
+        .live-section {
+            background: #eef6ec;
+
+            padding: 75px 25px;
+        }
+
+        .live-container {
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        .live-heading {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .live-heading h2 {
+            font-family: Georgia, serif;
+
+            color: #294934;
+            font-size: 35px;
+
+            margin-bottom: 10px;
+        }
+
+        .live-heading p {
+            color: #718076;
+            font-size: 14px;
+        }
+
+        .connection-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+
+            margin-top: 15px;
+
+            padding: 8px 14px;
+
+            border-radius: 20px;
+
+            background: white;
+            border: 1px solid #dbe8d8;
+
+            font-size: 12px;
+            color: #4e7458;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+
+            border-radius: 50%;
+
+            background: #42a85b;
+        }
+
+        .sensor-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 16px;
+        }
+
+        .sensor-card {
+            background: white;
+
+            padding: 22px;
+
+            border-radius: 8px;
+
+            border: 1px solid #e0e9de;
+        }
+
+        .sensor-icon {
+            font-size: 25px;
+            margin-bottom: 15px;
+        }
+
+        .sensor-name {
+            color: #758078;
+            font-size: 11px;
+
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .sensor-value {
+            margin-top: 7px;
+
+            color: #294934;
+
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .sensor-unit {
+            color: #87938b;
+            font-size: 12px;
+            font-weight: normal;
+        }
+
+        /* =========================
+           PUMP / SOIL STATUS
+        ========================= */
+
+        .status-grid {
+            margin-top: 20px;
+
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+
+            gap: 20px;
+        }
+
+        .info-box {
+            background: white;
+
+            border: 1px solid #e0e9de;
+
+            border-radius: 8px;
+
+            padding: 25px;
+        }
+
+        .info-box h3 {
+            color: #31583a;
+
+            font-family: Georgia, serif;
+
+            margin-bottom: 18px;
+        }
+
+        .pump-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .pump-value {
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        .pump-on {
+            color: #27964b;
+        }
+
+        .pump-off {
+            color: #a35b5b;
+        }
+
+        .soil-label {
+            display: flex;
+            justify-content: space-between;
+
+            color: #647169;
+            font-size: 13px;
+        }
+
+        .soil-bar {
+            height: 10px;
+
+            margin-top: 12px;
+
+            background: #e1e9df;
+
+            border-radius: 20px;
+
+            overflow: hidden;
+        }
+
+        .soil-fill {
+            width: 0%;
+
+            height: 100%;
+
+            background: #4d9b59;
+
+            transition: .4s;
+        }
+
+        /* =========================
+           GRAPH
+        ========================= */
+
+        .graph-box {
+            margin-top: 20px;
+
+            background: white;
+
+            border: 1px solid #e0e9de;
+
+            border-radius: 8px;
+
+            padding: 25px;
+        }
+
+        .graph-header {
+            display: flex;
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 20px;
+        }
+
+        .graph-header h3 {
+            color: #31583a;
+
+            font-family: Georgia, serif;
+        }
+
+        .graph-header span {
+            color: #829087;
+            font-size: 12px;
+        }
+
+        .chart-area {
+            height: 280px;
+        }
+
+        /* =========================
+           ABOUT
+        ========================= */
+
+        .about {
+            max-width: 1050px;
+            margin: auto;
+
+            padding: 75px 25px;
+
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 50px;
+
+            align-items: center;
+        }
+
+        .about-image {
+            height: 350px;
+
+            border-radius: 8px;
+
+            background:
+                url("https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&w=1000&q=85");
+
+            background-size: cover;
+            background-position: center;
+        }
+
+        .about-text h2 {
+            font-family: Georgia, serif;
+
+            font-size: 35px;
+
+            color: #294934;
+
+            margin-bottom: 17px;
+        }
+
+        .about-text p {
+            color: #6d796f;
+
+            line-height: 1.8;
+
+            font-size: 14px;
+
+            margin-bottom: 18px;
+        }
+
+        .about-list {
+            list-style: none;
+        }
+
+        .about-list li {
+            padding: 9px 0;
+
+            color: #526158;
+
+            font-size: 14px;
+        }
+
+        .about-list li::before {
+            content: "✓";
+
+            color: #3f9550;
+
+            font-weight: bold;
+
+            margin-right: 10px;
+        }
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        footer {
+            background: #1e3827;
+
+            color: #dcebdd;
+
+            text-align: center;
+
+            padding: 35px 20px;
+        }
+
+        footer h3 {
+            font-family: Georgia, serif;
+
+            margin-bottom: 10px;
+        }
+
+        footer p {
+            color: #a8bbaa;
+
+            font-size: 12px;
+        }
+
+        .footer-line {
+            margin-top: 18px;
+
+            color: #809783;
+
+            font-size: 11px;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 900px) {
+
+            .features {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .sensor-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .about {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 650px) {
+
+            nav {
+                display: none;
+            }
+
+            .hero {
+                height: 570px;
+            }
+
+            .hero h1 {
+                font-size: 42px;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+
+            .sensor-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .status-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .about-image {
+                height: 260px;
+            }
+        }
+
+        @media (max-width: 430px) {
+
+            .sensor-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .navbar {
+                padding: 0 15px;
+            }
+
+            .hero {
+                padding-left: 15px;
+                padding-right: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- =========================
+         NAVBAR
+    ========================= -->
+
+    <header>
+
+        <div class="navbar">
+
+            <div class="logo">
+
+                <div class="logo-icon">
+                    🌱
+                </div>
+
+                <span>AgriCore AIoT</span>
+
+            </div>
+
+            <nav>
+
+                <a href="#home">Home</a>
+
+                <a href="#technology">Technology</a>
+
+                <a href="#monitoring">Monitoring</a>
+
+                <a href="#about">About</a>
+
+                <a href="#monitoring" class="nav-button">
+                    Live System
+                </a>
+
+            </nav>
+
+        </div>
+
+    </header>
+
+
+    <!-- =========================
+         HERO
+    ========================= -->
+
+    <section class="hero" id="home">
+
+        <div class="hero-content">
+
+            <div class="hero-small">
+                AIoT Smart Agriculture
+            </div>
+
+            <h1>
+                Agriculture is<br>
+                the foundation of life.
+            </h1>
+
+            <p>
+                Intelligent agriculture combines technology,
+                sensors and real-time monitoring to help
+                farmers make smarter decisions.
+            </p>
+
+            <div class="hero-buttons">
+
+                <a href="#monitoring"
+                   class="hero-button primary">
+                    View Live Monitoring
+                </a>
+
+                <a href="#technology"
+                   class="hero-button secondary">
+                    Explore Technology
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         INTRO
+    ========================= -->
+
+    <section class="intro" id="technology">
+
+        <div class="section-label">
+            Smart Agriculture
+        </div>
+
+        <h2>
+            Technology meets the farm
+        </h2>
+
+        <p>
+            AgriCore AIoT uses an ESP32-based monitoring
+            system to collect environmental and agricultural
+            information and deliver it to a web dashboard
+            in real time.
+        </p>
+
+    </section>
+
+
+    <!-- =========================
+         FEATURE CARDS
+    ========================= -->
+
+    <section class="features">
+
+        <div class="feature-card">
+
+            <div class="feature-image"
+                 style="
+                 background-image:url(
+                 'https://images.unsplash.com/photo-1592982537447-7440770cbfc9?auto=format&fit=crop&w=700&q=80'
+                 );">
+            </div>
+
+            <div class="feature-content">
+
+                <h3>Smart Crops</h3>
+
+                <p>
+                    Monitor crop conditions using
+                    intelligent agricultural technology.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="feature-card">
+
+            <div class="feature-image"
+                 style="
+                 background-image:url(
+                 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=700&q=80'
+                 );">
+            </div>
+
+            <div class="feature-content">
+
+                <h3>Soil Health</h3>
+
+                <p>
+                    Observe soil moisture values and
+                    identify dry or wet conditions.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="feature-card">
+
+            <div class="feature-image"
+                 style="
+                 background-image:url(
+                 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=700&q=80'
+                 );">
+            </div>
+
+            <div class="feature-content">
+
+                <h3>Smart Water</h3>
+
+                <p>
+                    Track water distance and support
+                    automatic irrigation decisions.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="feature-card">
+
+            <div class="feature-image"
+     style="
+     background-image:url(
+     'https://images.unsplash.com/photo-1497250681960-ef046c08a56e?auto=format&fit=crop&w=700&q=80'
+     );">
+</div>
+
+            <div class="feature-content">
+
+                <h3>Environment</h3>
+
+                <p>
+                    Monitor temperature and humidity
+                    from the connected ESP32 system.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         LIVE MONITORING
+    ========================= -->
+
+    <section class="live-section" id="monitoring">
+
+        <div class="live-container">
+
+            <div class="live-heading">
+
+                <div class="section-label">
+                    Real-Time AIoT
+                </div>
+
+                <h2>
+                    Farm Monitoring Center
+                </h2>
+
+                <p>
+                    Live values received from ESP32 through Flask.
+                </p>
+
+                <div class="connection-status">
+
+                    <span class="status-dot"
+                          id="statusDot"></span>
+
+                    <span id="connectionText">
+                        Connecting to ESP32...
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- SENSOR CARDS -->
+
+            <div class="sensor-grid">
+
+                <div class="sensor-card">
+
+                    <div class="sensor-icon">
+                        🌡️
+                    </div>
+
+                    <div class="sensor-name">
+                        Temperature
+                    </div>
+
+                    <div class="sensor-value">
+
+                        <span id="temperature">
+                            --
+                        </span>
+
+                        <span class="sensor-unit">
+                            °C
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="sensor-card">
+
+                    <div class="sensor-icon">
+                        💧
+                    </div>
+
+                    <div class="sensor-name">
+                        Humidity
+                    </div>
+
+                    <div class="sensor-value">
+
+                        <span id="humidity">
+                            --
+                        </span>
+
+                        <span class="sensor-unit">
+                            %
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="sensor-card">
+
+                    <div class="sensor-icon">
+                        🌱
+                    </div>
+
+                    <div class="sensor-name">
+                        Soil Moisture
+                    </div>
+
+                    <div class="sensor-value">
+
+                        <span id="soil">
+                            --
+                        </span>
+
+                        <span class="sensor-unit">
+                            RAW
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="sensor-card">
+
+                    <div class="sensor-icon">
+                        📏
+                    </div>
+
+                    <div class="sensor-name">
+                        Water Distance
+                    </div>
+
+                    <div class="sensor-value">
+
+                        <span id="waterDistance">
+                            --
+                        </span>
+
+                        <span class="sensor-unit">
+                            cm
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- STATUS -->
+
+            <div class="status-grid">
+
+                <div class="info-box">
+
+                    <h3>
+                        Smart Irrigation
+                    </h3>
+
+                    <div class="pump-row">
+
+                        <div>
+                            <div style="
+                                color:#78847c;
+                                font-size:11px;
+                                margin-bottom:6px;
+                            ">
+                                WATER PUMP
+                            </div>
+
+                            <div id="pump"
+                                 class="pump-value pump-off">
+                                --
+                            </div>
+                        </div>
+
+                        <div style="font-size:40px;">
+                            🚿
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <h3>
+                        Soil Condition
+                    </h3>
+
+                    <div class="soil-label">
+
+                        <span id="soilStatus">
+                            WAITING
+                        </span>
+
+                        <span id="soilPercent">
+                            0%
+                        </span>
+
+                    </div>
+
+                    <div class="soil-bar">
+
+                        <div id="soilFill"
+                             class="soil-fill">
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- GRAPH -->
+
+            <div class="graph-box">
+
+                <div class="graph-header">
+
+                    <h3>
+                        Live Sensor History
+                    </h3>
+
+                    <span>
+                        Updating every 3 seconds
+                    </span>
+
+                </div>
+
+                <div class="chart-area">
+
+                    <canvas id="sensorChart"></canvas>
+
+                </div>
+
+            </div>
+
+
+            <!-- LAST UPDATE -->
+
+            <div style="
+                text-align:center;
+                margin-top:18px;
+                color:#718076;
+                font-size:12px;
+            ">
+
+                Last data received:
+
+                <strong id="lastUpdate">
+                    Waiting...
+                </strong>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         ABOUT
+    ========================= -->
+
+    <section class="about" id="about">
+
+        <div class="about-image"></div>
+
+        <div class="about-text">
+
+            <div class="section-label">
+                Our Approach
+            </div>
+
+            <h2>
+                A smarter way to understand agriculture
+            </h2>
+
+            <p>
+                AgriCore AIoT connects agricultural sensors
+                with an ESP32 and a web-based monitoring
+                platform.
+            </p>
+
+            <p>
+                The system helps visualize environmental
+                conditions and supports automated irrigation
+                based on soil moisture.
+            </p>
+
+            <ul class="about-list">
+
+                <li>
+                    Real-time ESP32 sensor monitoring
+                </li>
+
+                <li>
+                    Soil moisture analysis
+                </li>
+
+                <li>
+                    Temperature and humidity monitoring
+                </li>
+
+                <li>
+                    Water-level distance monitoring
+                </li>
+
+                <li>
+                    Automatic pump control
+                </li>
+
+            </ul>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         FOOTER
+    ========================= -->
+
+    <footer>
+
+        <h3>
+            🌱 AgriCore AIoT
+        </h3>
+
+        <p>
+            Intelligent Agriculture Monitoring System
+        </p>
+
+        <div class="footer-line">
+            ESP32 • Wokwi • Flask • Smart Agriculture
+        </div>
+
+    </footer>
+
+
+    <!-- =========================
+         JAVASCRIPT
+    ========================= -->
+
+    <script>
+
+        // ==========================================
+        // GRAPH
+        // ==========================================
+
+        const labels = [];
+        const temperatureData = [];
+        const humidityData = [];
+        const soilData = [];
+
+        const chartContext =
+            document
+                .getElementById("sensorChart")
+                .getContext("2d");
+
+
+        const sensorChart =
+            new Chart(chartContext, {
+
+                type: "line",
+
+                data: {
+
+                    labels: labels,
+
+                    datasets: [
+
+                        {
+                            label: "Temperature",
+                            data: temperatureData,
+
+                            borderColor: "#e58b62",
+                            backgroundColor: "rgba(229,139,98,.08)",
+
+                            borderWidth: 2,
+
+                            tension: .35,
+
+                            pointRadius: 2
+                        },
+
+                        {
+                            label: "Humidity",
+                            data: humidityData,
+
+                            borderColor: "#559ed1",
+                            backgroundColor: "rgba(85,158,209,.06)",
+
+                            borderWidth: 2,
+
+                            tension: .35,
+
+                            pointRadius: 2
+                        },
+
+                        {
+                            label: "Soil",
+                            data: soilData,
+
+                            borderColor: "#55a866",
+                            backgroundColor: "rgba(85,168,102,.06)",
+
+                            borderWidth: 2,
+
+                            tension: .35,
+
+                            pointRadius: 2
+                        }
+
+                    ]
+
+                },
+
+                options: {
+
+                    responsive: true,
+
+                    maintainAspectRatio: false,
+
+                    animation: false,
+
+                    plugins: {
+
+                        legend: {
+                            display: true
+                        }
+
+                    },
+
+                    scales: {
+
+                        x: {
+
+                            grid: {
+                                color: "rgba(0,0,0,.05)"
+                            }
+
+                        },
+
+                        y: {
+
+                            grid: {
+                                color: "rgba(0,0,0,.05)"
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            });
+
+
+        // ==========================================
+        // UPDATE DASHBOARD
+        // ==========================================
+
+        async function updateDashboard() {
+
+            try {
+
+                const response =
+                    await fetch(
+                        "/data?time=" + Date.now(),
+                        {
+                            cache: "no-store"
+                        }
+                    );
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Server error"
+                    );
+
+                }
+
+
+                const data =
+                    await response.json();
+
+
+                // ----------------------------------
+                // SENSOR VALUES
+                // ----------------------------------
+
+                const temperature =
+                    Number(
+                        data.temperature ?? 0
+                    );
+
+
+                const humidity =
+                    Number(
+                        data.humidity ?? 0
+                    );
+
+
+                const soil =
+                    Number(
+                        data.soil ?? 0
+                    );
+
+
+                const water =
+                    Number(
+                        data.water_distance ?? -1
+                    );
+
+
+                // ----------------------------------
+                // DISPLAY
+                // ----------------------------------
+
+                document
+                    .getElementById("temperature")
+                    .textContent =
+                    temperature.toFixed(1);
+
+
+                document
+                    .getElementById("humidity")
+                    .textContent =
+                    humidity.toFixed(1);
+
+
+                document
+                    .getElementById("soil")
+                    .textContent =
+                    Math.round(soil);
+
+
+                document
+                    .getElementById("waterDistance")
+                    .textContent =
+                    water < 0
+                        ? "No"
+                        : water.toFixed(1);
+
+
+                // ----------------------------------
+                // PUMP
+                // ----------------------------------
+
+                const pumpValue =
+                    data.pump_status;
+
+
+                const pump =
+                    pumpValue === true ||
+                    pumpValue === 1 ||
+                    (
+                        typeof pumpValue === "string" &&
+                        [
+                            "true",
+                            "1",
+                            "yes",
+                            "on"
+                        ].includes(
+                            pumpValue
+                                .trim()
+                                .toLowerCase()
+                        )
+                    );
+
+
+                const pumpElement =
+                    document.getElementById("pump");
+
+
+                if (pump) {
+
+                    pumpElement.textContent =
+                        "ON";
+
+                    pumpElement.className =
+                        "pump-value pump-on";
+
+                } else {
+
+                    pumpElement.textContent =
+                        "OFF";
+
+                    pumpElement.className =
+                        "pump-value pump-off";
+
+                }
+
+
+                // ----------------------------------
+                // SOIL STATUS
+                // ----------------------------------
+
+                const soilStatus =
+                    data.soil_status ||
+                    "UNKNOWN";
+
+
+                document
+                    .getElementById("soilStatus")
+                    .textContent =
+                    soilStatus;
+
+
+                // ----------------------------------
+                // SOIL PERCENTAGE
+                // ----------------------------------
+
+                let percentage =
+                    (soil / 4095) * 100;
+
+
+                percentage =
+                    Math.max(
+                        0,
+                        Math.min(
+                            100,
+                            percentage
+                        )
+                    );
+
+
+                percentage =
+                    Math.round(
+                        percentage
+                    );
+
+
+                document
+                    .getElementById("soilPercent")
+                    .textContent =
+                    percentage + "%";
+
+
+                document
+                    .getElementById("soilFill")
+                    .style.width =
+                    percentage + "%";
+
+
+                // ----------------------------------
+                // GRAPH
+                // ----------------------------------
+
+                const currentTime =
+                    new Date()
+                        .toLocaleTimeString();
+
+
+                labels.push(
+                    currentTime
+                );
+
+                temperatureData.push(
+                    temperature
+                );
+
+                humidityData.push(
+                    humidity
+                );
+
+                soilData.push(
+                    soil
+                );
+
+
+                // Keep last 20 points
+
+                if (labels.length > 20) {
+
+                    labels.shift();
+                    temperatureData.shift();
+                    humidityData.shift();
+                    soilData.shift();
+
+                }
+
+
+                sensorChart.update(
+                    "none"
+                );
+
+
+                // ----------------------------------
+                // CONNECTION
+                // ----------------------------------
+
+                document
+                    .getElementById(
+                        "connectionText"
+                    )
+                    .textContent =
+                    "ESP32 SYSTEM ONLINE";
+
+
+                document
+                    .getElementById(
+                        "statusDot"
+                    )
+                    .style.background =
+                    "#42a85b";
+
+
+                // ----------------------------------
+                // LAST UPDATE
+                // ----------------------------------
+
+                document
+                    .getElementById(
+                        "lastUpdate"
+                    )
+                    .textContent =
+                    data.time ||
+                    currentTime;
+
+
+            }
+
+            catch (error) {
+
+                console.error(error);
+
+
+                document
+                    .getElementById(
+                        "connectionText"
+                    )
+                    .textContent =
+                    "SERVER DISCONNECTED";
+
+
+                document
+                    .getElementById(
+                        "statusDot"
+                    )
+                    .style.background =
+                    "#d65b5b";
+
+            }
+
+        }
+
+
+        // First load
+
+        updateDashboard();
+
+
+        // Every 3 seconds
+
+        setInterval(
+            updateDashboard,
+            3000
+        );
+
+    </script>
+
+</body>
+
+</html>
