@@ -7,6 +7,8 @@
 
     <title>AgriCore AIoT</title>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <style>
         * {
             margin: 0;
@@ -883,11 +885,11 @@
         <div class="feature-card">
 
             <div class="feature-image"
-     style="
-     background-image:url(
-     'https://images.unsplash.com/photo-1497250681960-ef046c08a56e?auto=format&fit=crop&w=700&q=80'
-     );">
-</div>
+                 style="
+                 background-image:url(
+                 'https://images.unsplash.com/photo-1497250681960-ef046c08a56e?auto=format&fit=crop&w=700&q=80'
+                 );">
+            </div>
 
             <div class="feature-content">
 
@@ -1060,6 +1062,7 @@
                     <div class="pump-row">
 
                         <div>
+
                             <div style="
                                 color:#78847c;
                                 font-size:11px;
@@ -1072,6 +1075,7 @@
                                  class="pump-value pump-off">
                                 --
                             </div>
+
                         </div>
 
                         <div style="font-size:40px;">
@@ -1248,7 +1252,15 @@
     <script>
 
         // ==========================================
-        // GRAPH
+        // RENDER SERVER DATA
+        // ==========================================
+
+        const DATA_URL =
+            "https://smartagrinew.onrender.com/data";
+
+
+        // ==========================================
+        // GRAPH DATA
         // ==========================================
 
         const labels = [];
@@ -1256,108 +1268,125 @@
         const humidityData = [];
         const soilData = [];
 
-        const chartContext =
-            document
-                .getElementById("sensorChart")
-                .getContext("2d");
+
+        // ==========================================
+        // GRAPH
+        // ==========================================
+
+        let sensorChart = null;
 
 
-        const sensorChart =
-            new Chart(chartContext, {
+        const chartCanvas =
+            document.getElementById("sensorChart");
 
-                type: "line",
 
-                data: {
+        if (
+            chartCanvas &&
+            typeof Chart !== "undefined"
+        ) {
 
-                    labels: labels,
+            const chartContext =
+                chartCanvas.getContext("2d");
 
-                    datasets: [
 
-                        {
-                            label: "Temperature",
-                            data: temperatureData,
+            sensorChart =
+                new Chart(chartContext, {
 
-                            borderColor: "#e58b62",
-                            backgroundColor: "rgba(229,139,98,.08)",
+                    type: "line",
 
-                            borderWidth: 2,
+                    data: {
 
-                            tension: .35,
+                        labels: labels,
 
-                            pointRadius: 2
-                        },
+                        datasets: [
 
-                        {
-                            label: "Humidity",
-                            data: humidityData,
+                            {
+                                label: "Temperature",
+                                data: temperatureData,
 
-                            borderColor: "#559ed1",
-                            backgroundColor: "rgba(85,158,209,.06)",
+                                borderColor: "#e58b62",
+                                backgroundColor: "rgba(229,139,98,.08)",
 
-                            borderWidth: 2,
+                                borderWidth: 2,
 
-                            tension: .35,
+                                tension: .35,
 
-                            pointRadius: 2
-                        },
+                                pointRadius: 2
+                            },
 
-                        {
-                            label: "Soil",
-                            data: soilData,
+                            {
+                                label: "Humidity",
+                                data: humidityData,
 
-                            borderColor: "#55a866",
-                            backgroundColor: "rgba(85,168,102,.06)",
+                                borderColor: "#559ed1",
+                                backgroundColor: "rgba(85,158,209,.06)",
 
-                            borderWidth: 2,
+                                borderWidth: 2,
 
-                            tension: .35,
+                                tension: .35,
 
-                            pointRadius: 2
-                        }
+                                pointRadius: 2
+                            },
 
-                    ]
+                            {
+                                label: "Soil",
+                                data: soilData,
 
-                },
+                                borderColor: "#55a866",
+                                backgroundColor: "rgba(85,168,102,.06)",
 
-                options: {
+                                borderWidth: 2,
 
-                    responsive: true,
+                                tension: .35,
 
-                    maintainAspectRatio: false,
+                                pointRadius: 2
+                            }
 
-                    animation: false,
-
-                    plugins: {
-
-                        legend: {
-                            display: true
-                        }
+                        ]
 
                     },
 
-                    scales: {
+                    options: {
 
-                        x: {
+                        responsive: true,
 
-                            grid: {
-                                color: "rgba(0,0,0,.05)"
+                        maintainAspectRatio: false,
+
+                        animation: false,
+
+                        plugins: {
+
+                            legend: {
+                                display: true
                             }
 
                         },
 
-                        y: {
+                        scales: {
 
-                            grid: {
-                                color: "rgba(0,0,0,.05)"
+                            x: {
+
+                                grid: {
+                                    color: "rgba(0,0,0,.05)"
+                                }
+
+                            },
+
+                            y: {
+
+                                grid: {
+                                    color: "rgba(0,0,0,.05)"
+                                }
+
                             }
 
                         }
 
                     }
 
-                }
+                });
 
-            });
+        }
 
 
         // ==========================================
@@ -1370,17 +1399,24 @@
 
                 const response =
                     await fetch(
-                        "/data?time=" + Date.now(),
+
+                        DATA_URL +
+                        "?time=" +
+                        Date.now(),
+
                         {
+                            method: "GET",
                             cache: "no-store"
                         }
+
                     );
 
 
                 if (!response.ok) {
 
                     throw new Error(
-                        "Server error"
+                        "Server error: " +
+                        response.status
                     );
 
                 }
@@ -1388,6 +1424,12 @@
 
                 const data =
                     await response.json();
+
+
+                console.log(
+                    "ESP32 / Render DATA:",
+                    data
+                );
 
 
                 // ----------------------------------
@@ -1419,33 +1461,77 @@
 
 
                 // ----------------------------------
-                // DISPLAY
+                // DISPLAY TEMPERATURE
                 // ----------------------------------
 
-                document
-                    .getElementById("temperature")
-                    .textContent =
-                    temperature.toFixed(1);
+                const temperatureElement =
+                    document.getElementById(
+                        "temperature"
+                    );
 
 
-                document
-                    .getElementById("humidity")
-                    .textContent =
-                    humidity.toFixed(1);
+                if (temperatureElement) {
+
+                    temperatureElement.textContent =
+                        temperature.toFixed(1);
+
+                }
 
 
-                document
-                    .getElementById("soil")
-                    .textContent =
-                    Math.round(soil);
+                // ----------------------------------
+                // DISPLAY HUMIDITY
+                // ----------------------------------
+
+                const humidityElement =
+                    document.getElementById(
+                        "humidity"
+                    );
 
 
-                document
-                    .getElementById("waterDistance")
-                    .textContent =
-                    water < 0
-                        ? "No"
-                        : water.toFixed(1);
+                if (humidityElement) {
+
+                    humidityElement.textContent =
+                        humidity.toFixed(1);
+
+                }
+
+
+                // ----------------------------------
+                // DISPLAY SOIL
+                // ----------------------------------
+
+                const soilElement =
+                    document.getElementById(
+                        "soil"
+                    );
+
+
+                if (soilElement) {
+
+                    soilElement.textContent =
+                        Math.round(soil);
+
+                }
+
+
+                // ----------------------------------
+                // DISPLAY WATER DISTANCE
+                // ----------------------------------
+
+                const waterElement =
+                    document.getElementById(
+                        "waterDistance"
+                    );
+
+
+                if (waterElement) {
+
+                    waterElement.textContent =
+                        water < 0
+                            ? "No"
+                            : water.toFixed(1);
+
+                }
 
 
                 // ----------------------------------
@@ -1475,24 +1561,30 @@
 
 
                 const pumpElement =
-                    document.getElementById("pump");
+                    document.getElementById(
+                        "pump"
+                    );
 
 
-                if (pump) {
+                if (pumpElement) {
 
-                    pumpElement.textContent =
-                        "ON";
+                    if (pump) {
 
-                    pumpElement.className =
-                        "pump-value pump-on";
+                        pumpElement.textContent =
+                            "ON";
 
-                } else {
+                        pumpElement.className =
+                            "pump-value pump-on";
 
-                    pumpElement.textContent =
-                        "OFF";
+                    } else {
 
-                    pumpElement.className =
-                        "pump-value pump-off";
+                        pumpElement.textContent =
+                            "OFF";
+
+                        pumpElement.className =
+                            "pump-value pump-off";
+
+                    }
 
                 }
 
@@ -1506,10 +1598,18 @@
                     "UNKNOWN";
 
 
-                document
-                    .getElementById("soilStatus")
-                    .textContent =
-                    soilStatus;
+                const soilStatusElement =
+                    document.getElementById(
+                        "soilStatus"
+                    );
+
+
+                if (soilStatusElement) {
+
+                    soilStatusElement.textContent =
+                        soilStatus;
+
+                }
 
 
                 // ----------------------------------
@@ -1536,16 +1636,32 @@
                     );
 
 
-                document
-                    .getElementById("soilPercent")
-                    .textContent =
-                    percentage + "%";
+                const soilPercentElement =
+                    document.getElementById(
+                        "soilPercent"
+                    );
 
 
-                document
-                    .getElementById("soilFill")
-                    .style.width =
-                    percentage + "%";
+                if (soilPercentElement) {
+
+                    soilPercentElement.textContent =
+                        percentage + "%";
+
+                }
+
+
+                const soilFillElement =
+                    document.getElementById(
+                        "soilFill"
+                    );
+
+
+                if (soilFillElement) {
+
+                    soilFillElement.style.width =
+                        percentage + "%";
+
+                }
 
 
                 // ----------------------------------
@@ -1557,106 +1673,153 @@
                         .toLocaleTimeString();
 
 
-                labels.push(
-                    currentTime
-                );
+                if (sensorChart) {
 
-                temperatureData.push(
-                    temperature
-                );
-
-                humidityData.push(
-                    humidity
-                );
-
-                soilData.push(
-                    soil
-                );
+                    labels.push(
+                        currentTime
+                    );
 
 
-                // Keep last 20 points
+                    temperatureData.push(
+                        temperature
+                    );
 
-                if (labels.length > 20) {
 
-                    labels.shift();
-                    temperatureData.shift();
-                    humidityData.shift();
-                    soilData.shift();
+                    humidityData.push(
+                        humidity
+                    );
+
+
+                    soilData.push(
+                        soil
+                    );
+
+
+                    // Keep last 20 points
+
+                    if (labels.length > 20) {
+
+                        labels.shift();
+
+                        temperatureData.shift();
+
+                        humidityData.shift();
+
+                        soilData.shift();
+
+                    }
+
+
+                    sensorChart.update(
+                        "none"
+                    );
 
                 }
-
-
-                sensorChart.update(
-                    "none"
-                );
 
 
                 // ----------------------------------
                 // CONNECTION
                 // ----------------------------------
 
-                document
-                    .getElementById(
+                const connectionElement =
+                    document.getElementById(
                         "connectionText"
-                    )
-                    .textContent =
-                    "ESP32 SYSTEM ONLINE";
+                    );
 
 
-                document
-                    .getElementById(
+                if (connectionElement) {
+
+                    connectionElement.textContent =
+                        "ESP32 SYSTEM ONLINE";
+
+                }
+
+
+                const statusDotElement =
+                    document.getElementById(
                         "statusDot"
-                    )
-                    .style.background =
-                    "#42a85b";
+                    );
+
+
+                if (statusDotElement) {
+
+                    statusDotElement.style.background =
+                        "#42a85b";
+
+                }
 
 
                 // ----------------------------------
                 // LAST UPDATE
                 // ----------------------------------
 
-                document
-                    .getElementById(
+                const lastUpdateElement =
+                    document.getElementById(
                         "lastUpdate"
-                    )
-                    .textContent =
-                    data.time ||
-                    currentTime;
+                    );
+
+
+                if (lastUpdateElement) {
+
+                    lastUpdateElement.textContent =
+                        data.time ||
+                        currentTime;
+
+                }
 
 
             }
 
             catch (error) {
 
-                console.error(error);
+                console.error(
+                    "Dashboard connection error:",
+                    error
+                );
 
 
-                document
-                    .getElementById(
+                const connectionElement =
+                    document.getElementById(
                         "connectionText"
-                    )
-                    .textContent =
-                    "SERVER DISCONNECTED";
+                    );
 
 
-                document
-                    .getElementById(
+                if (connectionElement) {
+
+                    connectionElement.textContent =
+                        "SERVER DISCONNECTED";
+
+                }
+
+
+                const statusDotElement =
+                    document.getElementById(
                         "statusDot"
-                    )
-                    .style.background =
-                    "#d65b5b";
+                    );
+
+
+                if (statusDotElement) {
+
+                    statusDotElement.style.background =
+                        "#d65b5b";
+
+                }
 
             }
 
         }
 
 
-        // First load
+        // ==========================================
+        // FIRST LOAD
+        // ==========================================
 
         updateDashboard();
 
 
-        // Every 3 seconds
+        // ==========================================
+        // UPDATE EVERY 3 SECONDS
+        // ==========================================
 
         setInterval(
             updateDashboard,
