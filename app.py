@@ -1,121 +1,47 @@
-from flask import Flask, render_template, request, jsonify
-from datetime import datetime
-import os
-
-app = Flask(__name__)
-
-sensor_data = {
-    "temperature": 0.0,
-    "humidity": 0.0,
-    "soil": 0,
-    "water_distance": 0.0,
-    "pump_status": False,
-    "soil_status": "WAITING",
-    "time": "Waiting for ESP32 data..."
-}
-
-
-def to_bool(value):
-    if isinstance(value, bool):
-        return value
-
-    if isinstance(value, (int, float)):
-        return value != 0
-
-    if isinstance(value, str):
-        return value.lower().strip() in ["true", "1", "yes", "on"]
-
-    return False
-
-
-@app.after_request
-def add_cors_headers(response):
-    response.headers["Access-Control-Allow-Origin"] = "*"
-    response.headers["Access-Control-Allow-Headers"] = "Content-Type"
-    response.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
-    return response
-
-
-@app.route("/")
-def dashboard():
-    return render_template("dashboard.html")
-
-
 @app.route("/data")
 def get_data():
-    return jsonify(sensor_data)
-
-
-@app.route("/sensor", methods=["POST"])
-def receive_sensor():
-    global sensor_data
-
-    data = request.get_json(silent=True)
-
-    if not data:
-        return jsonify({
-            "status": "error",
-            "message": "No JSON data received"
-        }), 400
-
-    temperature = data.get("temperature", 0)
-    humidity = data.get("humidity", 0)
-    soil = data.get("soil_moisture", data.get("soil", 0))
-    water_distance = data.get("water_distance", 0)
-    pump_status = to_bool(data.get("pump_status", False))
 
     try:
-        soil_value = float(soil)
+        import urllib.request
+        import json
 
-        if soil_value < 1200:
-            soil_status = "DRY"
-        elif soil_value < 2800:
-            soil_status = "NORMAL"
-        else:
-            soil_status = "WET"
+        url = "https://smartagrinew.onrender.com/data"
 
-    except (ValueError, TypeError):
-        soil_status = "UNKNOWN"
+        req = urllib.request.Request(
+            url,
+            headers={
+                "User-Agent": "Mozilla/5.0"
+            }
+        )
 
-    sensor_data = {
-        "temperature": temperature,
-        "humidity": humidity,
-        "soil": soil,
-        "water_distance": water_distance,
-        "pump_status": pump_status,
-        "soil_status": soil_status,
-        "time": datetime.now().strftime("%d-%m-%Y %I:%M:%S %p")
-    }
+        with urllib.request.urlopen(req, timeout=30) as response:
 
-    print()
-    print("ESP32 DATA RECEIVED")
-    print("Temperature :", temperature)
-    print("Humidity    :", humidity)
-    print("Soil        :", soil)
-    print("Water       :", water_distance)
-    print("Pump        :", pump_status)
-    print("Soil Status :", soil_status)
-    print("Time        :", sensor_data["time"])
+            raw = response.read().decode("utf-8")
 
-    return jsonify({
-        "status": "success",
-        "message": "Sensor data received"
-    })
+            print()
+            print("========== RENDER DATA ==========")
+            print(raw)
+            print("=================================")
+            print()
 
+            data = json.loads(raw)
 
-@app.route("/health")
-def health():
-    return jsonify({
-        "status": "online",
-        "message": "Flask server is running"
-    })
+            return jsonify(data)
 
+    except Exception as e:
 
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
+        print()
+        print("========== DATA ERROR ==========")
+        print(str(e))
+        print("================================")
+        print()
 
-    app.run(
-        host="0.0.0.0",
-        port=port,
-        debug=False
-    )
+        return jsonify({
+            "temperature": 0.0,
+            "humidity": 0.0,
+            "soil": 0,
+            "water_distance": 0.0,
+            "pump_status": False,
+            "soil_status": "DISCONNECTED",
+            "time": "Waiting for ESP32 data..."
+        }), 503
