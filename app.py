@@ -1,20 +1,34 @@
+from flask import Flask, render_template, jsonify
+import urllib.request
+import json
+import os
+
+app = Flask(__name__)
+
+RENDER_DATA_URL = "https://smartagrinew.onrender.com/data"
+
+
+@app.route("/")
+def dashboard():
+    return render_template("dashboard.html")
+
+
 @app.route("/data")
 def get_data():
 
     try:
-        import urllib.request
-        import json
 
-        url = "https://smartagrinew.onrender.com/data"
-
-        req = urllib.request.Request(
-            url,
+        request = urllib.request.Request(
+            RENDER_DATA_URL,
             headers={
                 "User-Agent": "Mozilla/5.0"
             }
         )
 
-        with urllib.request.urlopen(req, timeout=30) as response:
+        with urllib.request.urlopen(
+            request,
+            timeout=30
+        ) as response:
 
             raw = response.read().decode("utf-8")
 
@@ -28,11 +42,11 @@ def get_data():
 
             return jsonify(data)
 
-    except Exception as e:
+    except Exception as error:
 
         print()
         print("========== DATA ERROR ==========")
-        print(str(e))
+        print(error)
         print("================================")
         print()
 
@@ -45,3 +59,28 @@ def get_data():
             "soil_status": "DISCONNECTED",
             "time": "Waiting for ESP32 data..."
         }), 503
+
+
+@app.route("/health")
+def health():
+
+    return jsonify({
+        "status": "online",
+        "message": "Local Flask server is running"
+    })
+
+
+if __name__ == "__main__":
+
+    port = int(
+        os.environ.get(
+            "PORT",
+            5000
+        )
+    )
+
+    app.run(
+        host="127.0.0.1",
+        port=port,
+        debug=False
+    )
