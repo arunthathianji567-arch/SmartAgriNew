@@ -2,3415 +2,2487 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AgriCore AIoT 3D Farm Command Center</title>
 
-<title>AgriSense | Smart Agriculture AIoT</title>
+<style>
+:root{
+ --bg:#03100b;
+ --bg2:#061a12;
+ --panel:rgba(7,27,19,.92);
+ --panel2:rgba(10,38,27,.96);
+ --line:rgba(105,255,184,.14);
+ --green:#55ffae;
+ --cyan:#50ddff;
+ --yellow:#ffd166;
+ --red:#ff617a;
+ --orange:#ff9b62;
+ --text:#effff8;
+ --muted:#75998d;
+}
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script> 
- 
-<style> 
- 
-*{ 
-    margin:0; 
-    padding:0; 
-    box-sizing:border-box; 
-} 
- 
-:root{ 
-    --bg:#080c0b; 
-    --panel:#101615; 
-    --panel2:#131b19; 
-    --border:rgba(255,255,255,.08); 
-    --text:#eef7f2; 
-    --muted:#8e9d97; 
-    --green:#7ee787; 
-    --green2:#3ddc84; 
-    --cyan:#5ee7d0; 
-    --yellow:#e8c66a; 
-    --red:#ff7272; 
-    --shadow:0 18px 50px rgba(0,0,0,.35); 
-} 
- 
-html{ 
-    scroll-behavior:smooth; 
-} 
- 
-body{ 
-    font-family:Inter,Segoe UI,Arial,sans-serif; 
-    background: 
-        radial-gradient(circle at 75% 10%,rgba(45,115,80,.10),transparent 28%), 
-        var(--bg); 
-    color:var(--text); 
-    min-height:100vh; 
-} 
- 
-/* ========================= 
-   LAYOUT 
-========================= */ 
- 
-.app{ 
-    display:flex; 
-    min-height:100vh; 
-} 
- 
-/* ========================= 
-   SIDEBAR 
-========================= */ 
- 
-.sidebar{ 
-    width:250px; 
-    min-width:250px; 
-    background:#0b100f; 
-    border-right:1px solid var(--border); 
-    padding:25px 16px; 
-    position:fixed; 
-    left:0; 
-    top:0; 
-    bottom:0; 
-    z-index:50; 
-} 
- 
-.logo{ 
-    display:flex; 
-    align-items:center; 
-    gap:12px; 
-    padding:5px 10px 30px; 
-} 
- 
-.logo-mark{ 
-    width:42px; 
-    height:42px; 
-    border-radius:13px; 
-    background:linear-gradient(145deg,#203d2c,#102018); 
-    border:1px solid rgba(126,231,135,.25); 
-    display:flex; 
-    align-items:center; 
-    justify-content:center; 
-    font-size:22px; 
-} 
- 
-.logo-text strong{ 
-    display:block; 
-    font-size:18px; 
-    letter-spacing:.4px; 
-} 
- 
-.logo-text span{ 
-    display:block; 
-    color:var(--muted); 
-    font-size:10px; 
-    margin-top:3px; 
-    letter-spacing:1.4px; 
-    text-transform:uppercase; 
-} 
- 
-.nav-title{ 
-    color:#64736d; 
-    font-size:10px; 
-    text-transform:uppercase; 
-    letter-spacing:1.6px; 
-    padding:0 12px 10px; 
-} 
- 
-.nav{ 
-    display:flex; 
-    flex-direction:column; 
-    gap:5px; 
-} 
- 
-.nav button{ 
-    border:0; 
-    background:transparent; 
-    color:#93a19c; 
-    width:100%; 
-    padding:12px 13px; 
-    border-radius:10px; 
-    text-align:left; 
-    cursor:pointer; 
-    font-size:13px; 
-    display:flex; 
-    align-items:center; 
-    gap:12px; 
-    transition:.2s; 
-} 
- 
-.nav button:hover, 
-.nav button.active{ 
-    color:var(--text); 
-    background:#14201b; 
-} 
- 
-.nav button.active{ 
-    box-shadow:inset 3px 0 0 var(--green); 
-} 
- 
-.nav-icon{ 
-    width:21px; 
-    text-align:center; 
-    font-size:16px; 
-} 
- 
-.sidebar-bottom{ 
-    position:absolute; 
-    left:16px; 
-    right:16px; 
-    bottom:22px; 
-} 
- 
-.connection-mini{ 
-    background:#101815; 
-    border:1px solid var(--border); 
-    border-radius:12px; 
-    padding:13px; 
-} 
- 
-.connection-mini-top{ 
-    display:flex; 
-    align-items:center; 
-    gap:8px; 
-    font-size:12px; 
-    margin-bottom:6px; 
-} 
- 
-.dot{ 
-    width:8px; 
-    height:8px; 
-    border-radius:50%; 
-    background:#777; 
-} 
- 
-.dot.online{ 
-    background:var(--green); 
-    box-shadow:0 0 10px rgba(126,231,135,.55); 
-} 
- 
-.dot.offline{ 
-    background:var(--red); 
-} 
- 
-.connection-mini small{ 
-    color:var(--muted); 
-    font-size:10px; 
-} 
- 
-/* ========================= 
-   MAIN 
-========================= */ 
- 
-.main{ 
-    margin-left:250px; 
-    width:calc(100% - 250px); 
-    padding:22px 28px 45px; 
-} 
- 
-.page{ 
-    max-width:1600px; 
-    margin:auto; 
-} 
- 
-/* ========================= 
-   TOP BAR 
-========================= */ 
- 
-.topbar{ 
-    display:flex; 
-    align-items:center; 
-    justify-content:space-between; 
-    margin-bottom:22px; 
-    gap:20px; 
-} 
- 
-.greeting small{ 
-    color:var(--green); 
-    font-size:11px; 
-    text-transform:uppercase; 
-    letter-spacing:1.5px; 
-} 
- 
-.greeting h1{ 
-    font-size:26px; 
-    margin-top:5px; 
-    font-weight:650; 
-} 
- 
-.greeting p{ 
-    color:var(--muted); 
-    font-size:12px; 
-    margin-top:5px; 
-} 
- 
-.top-actions{ 
-    display:flex; 
-    align-items:center; 
-    gap:10px; 
-} 
- 
-.live-badge{ 
-    display:flex; 
-    align-items:center; 
-    gap:8px; 
-    border:1px solid rgba(126,231,135,.2); 
-    background:#0e1914; 
-    padding:9px 12px; 
-    border-radius:9px; 
-    color:#bce8c7; 
-    font-size:11px; 
-} 
- 
-.live-dot{ 
-    width:7px; 
-    height:7px; 
-    border-radius:50%; 
-    background:var(--green); 
-} 
- 
-.icon-btn{ 
-    border:1px solid var(--border); 
-    background:#101615; 
-    color:#aab8b2; 
-    width:38px; 
-    height:38px; 
-    border-radius:9px; 
-    cursor:pointer; 
-} 
- 
-/* ========================= 
-   HERO GRID 
-========================= */ 
- 
-.hero-grid{ 
-    display:grid; 
-    grid-template-columns:minmax(0,1fr) 300px; 
-    gap:18px; 
-    margin-bottom:18px; 
-} 
- 
-/* ========================= 
-   FARM DIGITAL TWIN 
-========================= */ 
- 
-.farm-panel{ 
-    background: 
-        linear-gradient(145deg,rgba(24,42,34,.88),rgba(10,17,15,.96)); 
-    border:1px solid var(--border); 
-    border-radius:18px; 
-    overflow:hidden; 
-    min-height:490px; 
-    box-shadow:var(--shadow); 
-} 
- 
-.farm-header{ 
-    padding:19px 21px 10px; 
-    display:flex; 
-    align-items:flex-start; 
-    justify-content:space-between; 
-    position:relative; 
-    z-index:5; 
-} 
- 
-.farm-header h2{ 
-    font-size:17px; 
-} 
- 
-.farm-header p{ 
-    color:var(--muted); 
-    font-size:11px; 
-    margin-top:4px; 
-} 
- 
-.farm-status{ 
-    font-size:10px; 
-    color:#b9d6c5; 
-    border:1px solid rgba(126,231,135,.18); 
-    background:rgba(31,68,46,.3); 
-    padding:7px 10px; 
-    border-radius:8px; 
-} 
- 
-.farm-canvas{ 
-    position:relative; 
-    height:390px; 
-    overflow:hidden; 
-    background: 
-        radial-gradient(circle at 50% 45%,rgba(72,126,82,.18),transparent 34%), 
-        linear-gradient(160deg,#16241e,#0c1512); 
-} 
- 
-/* terrain */ 
- 
-.terrain{ 
-    position:absolute; 
-    width:92%; 
-    height:300px; 
-    left:4%; 
-    top:48px; 
-    transform:perspective(700px) rotateX(48deg) rotateZ(-1deg); 
-    border:1px solid rgba(126,231,135,.14); 
-    background: 
-        repeating-linear-gradient( 
-            90deg, 
-            rgba(105,145,91,.08) 0px, 
-            rgba(105,145,91,.08) 2px, 
-            transparent 2px, 
-            transparent 39px 
-        ), 
-        repeating-linear-gradient( 
-            0deg, 
-            rgba(105,145,91,.06) 0px, 
-            rgba(105,145,91,.06) 2px, 
-            transparent 2px, 
-            transparent 34px 
-        ), 
-        #1a2b21; 
-    border-radius:16px; 
-    box-shadow:0 30px 50px rgba(0,0,0,.35); 
-} 
- 
-/* crop fields */ 
- 
-.field{ 
-    position:absolute; 
-    background: 
-        repeating-linear-gradient( 
-            90deg, 
-            #385638 0, 
-            #385638 3px, 
-            #263f2c 3px, 
-            #263f2c 9px 
-        ); 
-    border:1px solid rgba(126,231,135,.13); 
-    border-radius:4px; 
-} 
- 
-.field.one{ 
-    width:190px; 
-    height:90px; 
-    left:11%; 
-    top:22%; 
-} 
- 
-.field.two{ 
-    width:210px; 
-    height:92px; 
-    left:42%; 
-    top:20%; 
-} 
- 
-.field.three{ 
-    width:175px; 
-    height:83px; 
-    left:68%; 
-    top:49%; 
-} 
- 
-.field.four{ 
-    width:210px; 
-    height:88px; 
-    left:24%; 
-    top:54%; 
-} 
- 
-/* irrigation lines */ 
- 
-.pipe{ 
-    position:absolute; 
-    height:3px; 
-    background:linear-gradient(90deg,transparent,var(--cyan),transparent); 
-    opacity:.72; 
-    box-shadow:0 0 7px rgba(94,231,208,.25); 
-} 
- 
-.pipe.p1{ 
-    width:420px; 
-    left:18%; 
-    top:44%; 
-    transform:rotate(-8deg); 
-} 
- 
-.pipe.p2{ 
-    width:300px; 
-    left:40%; 
-    top:68%; 
-    transform:rotate(8deg); 
-} 
- 
-.pipe.p3{ 
-    width:210px; 
-    left:63%; 
-    top:32%; 
-    transform:rotate(55deg); 
-} 
- 
-/* farm buildings */ 
- 
-.building{ 
-    position:absolute; 
-    width:76px; 
-    height:52px; 
-    background:#52605a; 
-    border:1px solid rgba(255,255,255,.13); 
-    border-radius:5px; 
-    box-shadow:0 12px 18px rgba(0,0,0,.3); 
-} 
- 
-.building:before{ 
-    content:""; 
-    position:absolute; 
-    left:-8px; 
-    top:-22px; 
-    width:92px; 
-    height:40px; 
-    background:#2d3733; 
-    clip-path:polygon(50% 0,100% 70%,94% 100%,6% 100%,0 70%); 
-} 
- 
-.building.house{ 
-    left:46%; 
-    top:60%; 
-} 
- 
-.tank{ 
-    position:absolute; 
-    width:52px; 
-    height:60px; 
-    background:linear-gradient(90deg,#566760,#28342f); 
-    border:1px solid rgba(255,255,255,.16); 
-    border-radius:12px 12px 8px 8px; 
-    left:78%; 
-    top:20%; 
-} 
- 
-.tank:after{ 
-    content:""; 
-    position:absolute; 
-    left:7px; 
-    right:7px; 
-    top:8px; 
-    height:8px; 
-    background:#6f8179; 
-    border-radius:50%; 
-} 
- 
-.reservoir{ 
-    position:absolute; 
-    width:110px; 
-    height:58px; 
-    background: 
-        radial-gradient(ellipse at 50% 50%,#397d81,#173d3e); 
-    border:2px solid rgba(94,231,208,.22); 
-    border-radius:50%; 
-    left:7%; 
-    top:65%; 
-} 
- 
-.solar{ 
-    position:absolute; 
-    width:72px; 
-    height:42px; 
-    background: 
-        repeating-linear-gradient(90deg,#1e5260 0 8px,#0c2b34 8px 10px), 
-        repeating-linear-gradient(0deg,#1e5260 0 8px,#0c2b34 8px 10px); 
-    border:2px solid #5b7c7a; 
-    transform:skewY(-12deg); 
-    left:73%; 
-    top:68%; 
-} 
- 
-/* sensor pins */ 
- 
-.sensor-pin{ 
-    position:absolute; 
-    width:12px; 
-    height:12px; 
-    border-radius:50%; 
-    background:var(--green); 
-    border:2px solid #102117; 
-    box-shadow:0 0 0 5px rgba(126,231,135,.09); 
-    z-index:4; 
-} 
- 
-.sensor-pin.s1{left:26%;top:35%} 
-.sensor-pin.s2{left:56%;top:33%} 
-.sensor-pin.s3{left:76%;top:55%} 
-.sensor-pin.s4{left:38%;top:72%} 
- 
-.sensor-label{ 
-    position:absolute; 
-    z-index:5; 
-    background:rgba(8,13,12,.88); 
-    border:1px solid rgba(255,255,255,.09); 
-    padding:7px 9px; 
-    border-radius:7px; 
-    min-width:110px; 
-    backdrop-filter:blur(8px); 
-    font-size:9px; 
-} 
- 
-.sensor-label strong{ 
-    display:block; 
-    color:#e9f6ef; 
-    font-size:10px; 
-} 
- 
-.sensor-label span{ 
-    color:var(--green); 
-    display:block; 
-    margin-top:3px; 
-} 
- 
-.sensor-label.l1{left:12%;top:14%} 
-.sensor-label.l2{left:49%;top:8%} 
-.sensor-label.l3{right:4%;top:43%} 
-.sensor-label.l4{left:29%;bottom:5%} 
- 
-/* ========================= 
-   RIGHT PANELS 
-========================= */ 
- 
-.side-stack{ 
-    display:flex; 
-    flex-direction:column; 
-    gap:18px; 
-} 
- 
-.side-card{ 
-    background:var(--panel); 
-    border:1px solid var(--border); 
-    border-radius:16px; 
-    padding:19px; 
-    box-shadow:var(--shadow); 
-} 
- 
-.side-title{ 
-    display:flex; 
-    justify-content:space-between; 
-    align-items:center; 
-    margin-bottom:16px; 
-} 
- 
-.side-title h3{ 
-    font-size:13px; 
-} 
- 
-.side-title span{ 
-    font-size:10px; 
-    color:var(--muted); 
-} 
- 
-.weather-main{ 
-    display:flex; 
-    align-items:center; 
-    justify-content:space-between; 
-} 
- 
-.weather-temp{ 
-    font-size:42px; 
-    font-weight:650; 
-} 
- 
-.weather-temp span{ 
-    font-size:15px; 
-    color:var(--muted); 
-} 
- 
-.weather-condition{ 
-    color:var(--green); 
-    font-size:11px; 
-    margin-top:3px; 
-} 
- 
-.weather-icon{ 
-    font-size:40px; 
-} 
- 
-.weather-meta{ 
-    display:grid; 
-    grid-template-columns:1fr 1fr; 
-    gap:8px; 
-    margin-top:20px; 
-} 
- 
-.weather-meta div{ 
-    background:#0b1210; 
-    border:1px solid var(--border); 
-    padding:10px; 
-    border-radius:8px; 
-} 
- 
-.weather-meta small{ 
-    color:var(--muted); 
-    font-size:9px; 
-} 
- 
-.weather-meta strong{ 
-    display:block; 
-    margin-top:4px; 
-    font-size:12px; 
-} 
- 
-.alert{ 
-    display:flex; 
-    gap:10px; 
-    padding:10px 0; 
-    border-bottom:1px solid rgba(255,255,255,.05); 
-} 
- 
-.alert:last-child{ 
-    border-bottom:0; 
-} 
- 
-.alert-icon{ 
-    width:28px; 
-    height:28px; 
-    border-radius:8px; 
-    display:flex; 
-    align-items:center; 
-    justify-content:center; 
-    background:#18211e; 
-} 
- 
-.alert strong{ 
-    display:block; 
-    font-size:11px; 
-} 
- 
-.alert span{ 
-    display:block; 
-    color:var(--muted); 
-    font-size:9px; 
-    margin-top:3px; 
-} 
- 
-/* ========================= 
-   METRIC CARDS 
-========================= */ 
- 
-.section-head{ 
-    display:flex; 
-    justify-content:space-between; 
-    align-items:end; 
-    margin:25px 0 13px; 
-} 
- 
-.section-head h2{ 
-    font-size:16px; 
-} 
- 
-.section-head p{ 
-    color:var(--muted); 
-    font-size:10px; 
-    margin-top:4px; 
-} 
- 
-.metrics{ 
-    display:grid; 
-    grid-template-columns:repeat(5,1fr); 
-    gap:12px; 
-} 
- 
-.metric{ 
-    background:var(--panel); 
-    border:1px solid var(--border); 
-    border-radius:13px; 
-    padding:15px; 
-    min-height:108px; 
-    transition:.2s; 
-} 
- 
-.metric:hover{ 
-    transform:translateY(-2px); 
-    border-color:rgba(126,231,135,.22); 
-} 
- 
-.metric-top{ 
-    display:flex; 
-    justify-content:space-between; 
-    align-items:center; 
-} 
- 
-.metric-label{ 
-    color:var(--muted); 
-    font-size:10px; 
-} 
- 
-.metric-icon{ 
-    width:28px; 
-    height:28px; 
-    border-radius:8px; 
-    background:#17211d; 
-    display:flex; 
-    align-items:center; 
-    justify-content:center; 
-} 
- 
-.metric-value{ 
-    font-size:23px; 
-    font-weight:650; 
-    margin-top:12px; 
-} 
- 
-.metric-value small{ 
-    color:var(--muted); 
-    font-size:10px; 
-    font-weight:400; 
-} 
- 
-.metric-status{ 
-    color:var(--green); 
-    font-size:9px; 
-    margin-top:4px; 
-} 
- 
-/* ========================= 
-   CHART GRID 
-========================= */ 
- 
-.charts-grid{ 
-    display:grid; 
-    grid-template-columns:repeat(2,1fr); 
-    gap:16px; 
-} 
- 
-.chart-card{ 
-    background:var(--panel); 
-    border:1px solid var(--border); 
-    border-radius:15px; 
-    padding:18px; 
-    min-height:300px; 
-} 
- 
-.chart-card.wide{ 
-    grid-column:span 2; 
-} 
- 
-.chart-head{ 
-    display:flex; 
-    align-items:center; 
-    justify-content:space-between; 
-    margin-bottom:15px; 
-} 
- 
-.chart-head h3{ 
-    font-size:13px; 
-} 
- 
-.chart-head p{ 
-    color:var(--muted); 
-    font-size:9px; 
-    margin-top:3px; 
-} 
- 
-.chart-box{ 
-    position:relative; 
-    height:215px; 
-} 
- 
-.chart-small{ 
-    height:190px; 
-} 
- 
-/* ========================= 
-   LOWER GRID 
-========================= */ 
- 
-.lower-grid{ 
-    display:grid; 
-    grid-template-columns:1.2fr 1fr 1fr; 
-    gap:16px; 
-} 
- 
-.info-card{ 
-    background:var(--panel); 
-    border:1px solid var(--border); 
-    border-radius:15px; 
-    padding:19px; 
-} 
- 
-.info-card h3{ 
-    font-size:13px; 
-} 
- 
-.info-card > p{ 
-    color:var(--muted); 
-    font-size:9px; 
-    margin-top:4px; 
-} 
- 
-.progress-row{ 
-    margin-top:18px; 
-} 
- 
-.progress-info{ 
-    display:flex; 
-    justify-content:space-between; 
-    font-size:10px; 
-    margin-bottom:6px; 
-} 
- 
-.progress-info span{ 
-    color:var(--muted); 
-} 
- 
-.progress{ 
-    height:6px; 
-    background:#202a26; 
-    border-radius:20px; 
-    overflow:hidden; 
-} 
- 
-.progress div{ 
-    height:100%; 
-    width:65%; 
-    background:linear-gradient(90deg,var(--green2),var(--cyan)); 
-    border-radius:20px; 
-} 
- 
-.resource{ 
-    display:flex; 
-    justify-content:space-between; 
-    padding:11px 0; 
-    border-bottom:1px solid rgba(255,255,255,.05); 
-} 
- 
-.resource:last-child{ 
-    border:0; 
-} 
- 
-.resource span{ 
-    color:var(--muted); 
-    font-size:10px; 
-} 
- 
-.resource strong{ 
-    font-size:11px; 
-} 
- 
-/* ========================= 
-   AI PANEL 
-========================= */ 
- 
-.ai-panel{ 
-    margin-top:16px; 
-    background: 
-        linear-gradient(110deg,#13231b,#101c1a); 
-    border:1px solid rgba(126,231,135,.16); 
-    border-radius:15px; 
-    padding:20px; 
-} 
- 
-.ai-head{ 
-    display:flex; 
-    align-items:center; 
-    gap:11px; 
-} 
- 
-.ai-icon{ 
-    width:38px; 
-    height:38px; 
-    border-radius:10px; 
-    background:#1c3527; 
-    display:flex; 
-    align-items:center; 
-    justify-content:center; 
-    font-size:18px; 
-} 
- 
-.ai-head h3{ 
-    font-size:13px; 
-} 
- 
-.ai-head p{ 
-    color:var(--muted); 
-    font-size:9px; 
-    margin-top:3px; 
-} 
- 
-.ai-grid{ 
-    display:grid; 
-    grid-template-columns:repeat(3,1fr); 
-    gap:10px; 
-    margin-top:17px; 
-} 
- 
-.ai-item{ 
-    background:rgba(0,0,0,.18); 
-    border:1px solid rgba(255,255,255,.06); 
-    border-radius:10px; 
-    padding:12px; 
-} 
- 
-.ai-item strong{ 
-    font-size:10px; 
-    display:block; 
-} 
- 
-.ai-item span{ 
-    color:#9eaea7; 
-    font-size:9px; 
-    line-height:1.5; 
-    display:block; 
-    margin-top:5px; 
-} 
- 
-/* ========================= 
-   QUICK ACTIONS 
-========================= */ 
- 
-.actions{ 
-    display:grid; 
-    grid-template-columns:repeat(4,1fr); 
-    gap:10px; 
-    margin-top:16px; 
-} 
- 
-.action-btn{ 
-    border:1px solid var(--border); 
-    background:#101715; 
-    color:#d7e5df; 
-    border-radius:11px; 
-    padding:14px; 
-    cursor:pointer; 
-    text-align:left; 
-    transition:.2s; 
-} 
- 
-.action-btn:hover{ 
-    background:#15221c; 
-    border-color:rgba(126,231,135,.25); 
-} 
- 
-.action-btn strong{ 
-    display:block; 
-    font-size:11px; 
-} 
- 
-.action-btn span{ 
-    color:var(--muted); 
-    font-size:9px; 
-    display:block; 
-    margin-top:4px; 
-} 
- 
-/* ========================= 
-   IRRIGATION 
-========================= */ 
- 
-.irrigation-panel{ 
-    margin-top:16px; 
-    background:var(--panel); 
-    border:1px solid var(--border); 
-    border-radius:15px; 
-    padding:18px; 
-    display:flex; 
-    justify-content:space-between; 
-    align-items:center; 
-    gap:20px; 
-} 
- 
-.irrigation-info h3{ 
-    font-size:14px; 
-} 
- 
-.irrigation-info p{ 
-    color:var(--muted); 
-    font-size:10px; 
-    margin-top:5px; 
-} 
- 
-.irrigation-status{ 
-    display:flex; 
-    align-items:center; 
-    gap:9px; 
-    color:var(--green); 
-    font-size:11px; 
-} 
- 
-.pump-btn{ 
-    border:0; 
-    background:#2b7d49; 
-    color:white; 
-    padding:11px 17px; 
-    border-radius:9px; 
-    cursor:pointer; 
-    font-weight:600; 
-    font-size:11px; 
-} 
- 
-.pump-btn.active{ 
-    background:#9b4b4b; 
-} 
- 
-/* ========================= 
-   FOOTER 
-========================= */ 
- 
-.footer{ 
-    margin-top:30px; 
-    padding-top:20px; 
-    border-top:1px solid var(--border); 
-    display:flex; 
-    justify-content:space-between; 
-    color:#63716c; 
-    font-size:9px; 
-} 
- 
-/* ========================= 
-   TOAST 
-========================= */ 
- 
-.toast{ 
-    position:fixed; 
-    right:22px; 
-    bottom:22px; 
-    background:#17221e; 
-    border:1px solid rgba(126,231,135,.2); 
-    color:#dcece4; 
-    padding:12px 16px; 
-    border-radius:9px; 
-    font-size:11px; 
-    opacity:0; 
-    pointer-events:none; 
-    transform:translateY(10px); 
-    transition:.25s; 
-    z-index:100; 
-} 
- 
-.toast.show{ 
-    opacity:1; 
-    transform:translateY(0); 
-} 
- 
-/* ========================= 
-   RESPONSIVE 
-========================= */ 
- 
-@media(max-width:1250px){ 
- 
-    .metrics{ 
-        grid-template-columns:repeat(3,1fr); 
-    } 
- 
-    .hero-grid{ 
-        grid-template-columns:1fr; 
-    } 
- 
-    .side-stack{ 
-        display:grid; 
-        grid-template-columns:1fr 1fr; 
-    } 
- 
-    .lower-grid{ 
-        grid-template-columns:1fr 1fr; 
-    } 
- 
-} 
- 
-@media(max-width:900px){ 
- 
-    .sidebar{ 
-        width:70px; 
-        min-width:70px; 
-        padding:18px 8px; 
-    } 
- 
-    .logo{ 
-        justify-content:center; 
-        padding:5px 0 25px; 
-    } 
- 
-    .logo-text, 
-    .nav-title, 
-    .nav button span:not(.nav-icon), 
-    .connection-mini{ 
-        display:none; 
-    } 
- 
-    .nav button{ 
-        justify-content:center; 
-        padding:13px 5px; 
-    } 
- 
-    .main{ 
-        margin-left:70px; 
-        width:calc(100% - 70px); 
-        padding:18px; 
-    } 
- 
-    .charts-grid{ 
-        grid-template-columns:1fr; 
-    } 
- 
-    .chart-card.wide{ 
-        grid-column:auto; 
-    } 
- 
-    .lower-grid{ 
-        grid-template-columns:1fr; 
-    } 
- 
-} 
- 
-@media(max-width:650px){ 
- 
-    .main{ 
-        padding:12px; 
-    } 
- 
-    .topbar{ 
-        align-items:flex-start; 
-    } 
- 
-    .greeting h1{ 
-        font-size:21px; 
-    } 
- 
-    .top-actions{ 
-        flex-direction:column; 
-        align-items:flex-end; 
-    } 
- 
-    .metrics{ 
-        grid-template-columns:1fr 1fr; 
-    } 
- 
-    .side-stack{ 
-        grid-template-columns:1fr; 
-    } 
- 
-    .ai-grid{ 
-        grid-template-columns:1fr; 
-    } 
- 
-    .actions{ 
-        grid-template-columns:1fr 1fr; 
-    } 
- 
-    .farm-canvas{ 
-        height:330px; 
-    } 
- 
-    .farm-panel{ 
-        min-height:430px; 
-    } 
- 
-    .terrain{ 
-        width:110%; 
-        left:-5%; 
-    } 
- 
-    .field.one{ 
-        width:140px; 
-    } 
- 
-    .field.two{ 
-        width:150px; 
-    } 
- 
-    .field.three{ 
-        width:130px; 
-    } 
- 
-    .field.four{ 
-        width:145px; 
-    } 
- 
-    .sensor-label{ 
-        transform:scale(.85); 
-        transform-origin:left top; 
-    } 
- 
-    .irrigation-panel{ 
-        flex-direction:column; 
-        align-items:flex-start; 
-    } 
- 
-    .footer{ 
-        flex-direction:column; 
-        gap:8px; 
-    } 
- 
-} 
- 
-</style> 
-</head> 
- 
-<body> 
- 
-<div class="app"> 
- 
-<!-- ================= SIDEBAR ================= --> 
- 
-<aside class="sidebar"> 
- 
-    <div class="logo"> 
-        <div class="logo-mark">🌱</div> 
- 
-        <div class="logo-text"> 
-            <strong>AgriSense</strong> 
-            <span>AIoT Agriculture</span> 
-        </div> 
-    </div> 
- 
-    <div class="nav-title">Workspace</div> 
- 
-    <div class="nav"> 
- 
-        <button class="active" data-section="home"> 
-            <span class="nav-icon">⌂</span> 
-            <span>Home</span> 
-        </button> 
- 
-        <button data-section="monitoring"> 
-            <span class="nav-icon">◉</span> 
-            <span>Live Farm View</span> 
-        </button> 
- 
-        <button data-section="analytics"> 
-            <span class="nav-icon">⌁</span> 
-            <span>Analytics</span> 
-        </button> 
- 
-        <button data-section="reports"> 
-            <span class="nav-icon">▤</span> 
-            <span>Reports</span> 
-        </button> 
- 
-        <button data-section="irrigation"> 
-            <span class="nav-icon">💧</span> 
-            <span>Irrigation</span> 
-        </button> 
- 
-        <button data-section="settings"> 
-            <span class="nav-icon">⚙</span> 
-            <span>Settings</span> 
-        </button> 
- 
-    </div> 
- 
-    <div class="sidebar-bottom"> 
- 
-        <div class="connection-mini"> 
- 
-            <div class="connection-mini-top"> 
-                <span class="dot" id="sideDot"></span> 
-                <strong id="sideConnection">Connecting</strong> 
-            </div> 
- 
-            <small>ESP32 • Flask • Cloud</small> 
- 
-        </div> 
- 
-    </div> 
- 
-</aside> 
- 
- 
-<!-- ================= MAIN ================= --> 
- 
-<main class="main"> 
- 
-<div class="page"> 
- 
- 
-<!-- ================= TOPBAR ================= --> 
- 
-<div class="topbar"> 
- 
-    <div class="greeting"> 
- 
-        <small>Smart Agriculture Command Center</small> 
- 
-        <h1>Good evening, Rishi.</h1> 
- 
-        <p> 
-            Rajapalayam • 
-            <span id="currentDate">25 September 2026</span> 
-        </p> 
- 
-    </div> 
- 
-    <div class="top-actions"> 
- 
-        <div class="live-badge"> 
-            <span class="live-dot" id="topLiveDot"></span> 
-            <span id="topConnection">ESP32 CONNECTING</span> 
-        </div> 
- 
-        <button class="icon-btn" id="refreshBtn">↻</button> 
- 
-    </div> 
- 
-</div> 
- 
- 
-<!-- ================= HERO ================= --> 
- 
-<div class="hero-grid" id="home"> 
- 
- 
-<!-- DIGITAL FARM --> 
- 
-<section class="farm-panel" id="monitoring"> 
- 
-    <div class="farm-header"> 
- 
-        <div> 
-            <h2>Digital Farm Twin</h2> 
-            <p>Real-time representation of your connected farm</p> 
-        </div> 
- 
-        <div class="farm-status"> 
-            ● LIVE ENVIRONMENT 
-        </div> 
- 
-    </div> 
- 
- 
-    <div class="farm-canvas"> 
- 
-        <div class="terrain"> 
- 
-            <div class="field one"></div> 
-            <div class="field two"></div> 
-            <div class="field three"></div> 
-            <div class="field four"></div> 
- 
-            <div class="pipe p1"></div> 
-            <div class="pipe p2"></div> 
-            <div class="pipe p3"></div> 
- 
-            <div class="building house"></div> 
- 
-            <div class="tank"></div> 
- 
-            <div class="reservoir"></div> 
- 
-            <div class="solar"></div> 
- 
-        </div> 
- 
- 
-        <!-- SENSOR PINS --> 
- 
-        <div class="sensor-pin s1"></div> 
-        <div class="sensor-pin s2"></div> 
-        <div class="sensor-pin s3"></div> 
-        <div class="sensor-pin s4"></div> 
- 
- 
-        <!-- SENSOR LABELS --> 
- 
-        <div class="sensor-label l1"> 
-            <strong>Soil Moisture</strong> 
-            <span id="farmSoil">1669 RAW</span> 
-        </div> 
- 
-        <div class="sensor-label l2"> 
-            <strong>Temperature</strong> 
-            <span id="farmTemp">24.0 °C</span> 
-        </div> 
- 
-        <div class="sensor-label l3"> 
-            <strong>Water Level</strong> 
-            <span id="farmWater">403.4 cm</span> 
-        </div> 
- 
-        <div class="sensor-label l4"> 
-            <strong>Humidity</strong> 
-            <span id="farmHumidity">40 %</span> 
-        </div> 
- 
-    </div> 
- 
-</section> 
- 
- 
-<!-- RIGHT SIDE --> 
- 
-<div class="side-stack"> 
- 
- 
-    <!-- WEATHER --> 
- 
-    <section class="side-card"> 
- 
-        <div class="side-title"> 
-            <h3>Weather Intelligence</h3> 
-            <span>LIVE</span> 
-        </div> 
- 
-        <div class="weather-main"> 
- 
-            <div> 
-                <div class="weather-temp"> 
-                    <span id="weatherTemp">24.0</span> 
-                    <span>°C</span> 
-                </div> 
- 
-                <div class="weather-condition"> 
-                    Normal agricultural condition 
-                </div> 
-            </div> 
- 
-            <div class="weather-icon">🌤️</div> 
- 
-        </div> 
- 
-        <div class="weather-meta"> 
- 
-            <div> 
-                <small>Humidity</small> 
-                <strong id="weatherHumidity">40%</strong> 
-            </div> 
- 
-            <div> 
-                <small>Soil</small> 
-                <strong id="weatherSoil">1669</strong> 
-            </div> 
- 
-            <div> 
-                <small>Water</small> 
-                <strong id="weatherWater">403 cm</strong> 
-            </div> 
- 
-            <div> 
-                <small>Pump</small> 
-                <strong id="weatherPump">OFF</strong> 
-            </div> 
- 
-        </div> 
- 
-    </section> 
- 
- 
-    <!-- ALERTS --> 
- 
-    <section class="side-card"> 
- 
-        <div class="side-title"> 
-            <h3>Important Alerts</h3> 
-            <span id="alertCount">0 ACTIVE</span> 
-        </div> 
- 
-        <div id="alerts"> 
- 
-            <div class="alert"> 
- 
-                <div class="alert-icon">✓</div> 
- 
-                <div> 
-                    <strong>System connected</strong> 
-                    <span>Waiting for live sensor updates</span> 
-                </div> 
- 
-            </div> 
- 
-            <div class="alert"> 
- 
-                <div class="alert-icon">💧</div> 
- 
-                <div> 
-                    <strong>Water monitoring active</strong> 
-                    <span>Distance sensor reporting</span> 
-                </div> 
- 
-            </div> 
- 
-            <div class="alert"> 
- 
-                <div class="alert-icon">🌱</div> 
- 
-                <div> 
-                    <strong>Soil analysis active</strong> 
-                    <span>ESP32 moisture sensor online</span> 
-                </div> 
- 
-            </div> 
- 
-        </div> 
- 
-    </section> 
- 
-</div> 
- 
-</div> 
- 
- 
-<!-- ================= METRICS ================= --> 
- 
-<div class="section-head"> 
- 
-    <div> 
-        <h2>Live Farm Intelligence</h2> 
-        <p>Real-time values received from ESP32 through Flask</p> 
-    </div> 
- 
-</div> 
- 
- 
-<div class="metrics"> 
- 
- 
-    <div class="metric"> 
-        <div class="metric-top"> 
-            <span class="metric-label">Temperature</span> 
-            <div class="metric-icon">🌡️</div> 
-        </div> 
-        <div class="metric-value"> 
-            <span id="temperature">--</span> 
-            <small>°C</small> 
-        </div> 
-        <div class="metric-status">● LIVE SENSOR</div> 
-    </div> 
- 
- 
-    <div class="metric"> 
-        <div class="metric-top"> 
-            <span class="metric-label">Humidity</span> 
-            <div class="metric-icon">💧</div> 
-        </div> 
-        <div class="metric-value"> 
-            <span id="humidity">--</span> 
-            <small>%</small> 
-        </div> 
-        <div class="metric-status">● LIVE SENSOR</div> 
-    </div> 
- 
- 
-    <div class="metric"> 
-        <div class="metric-top"> 
-            <span class="metric-label">Soil Moisture</span> 
-            <div class="metric-icon">🌱</div> 
-        </div> 
-        <div class="metric-value"> 
-            <span id="soil">--</span> 
-            <small>RAW</small> 
-        </div> 
-        <div class="metric-status" id="soilStatusMini">● WAITING</div> 
-    </div> 
- 
- 
-    <div class="metric"> 
-        <div class="metric-top"> 
-            <span class="metric-label">Water Distance</span> 
-            <div class="metric-icon">🌊</div> 
-        </div> 
-        <div class="metric-value"> 
-            <span id="waterDistance">--</span> 
-            <small>cm</small> 
-        </div> 
-        <div class="metric-status">● LIVE SENSOR</div> 
-    </div> 
- 
- 
-    <div class="metric"> 
-        <div class="metric-top"> 
-            <span class="metric-label">Pump Status</span> 
-            <div class="metric-icon">⚙️</div> 
-        </div> 
-        <div class="metric-value" id="pump">--</div> 
-        <div class="metric-status">● CONTROL NODE</div> 
-    </div> 
- 
- 
-    <div class="metric"> 
-        <div class="metric-top"> 
-            <span class="metric-label">Soil Condition</span> 
-            <div class="metric-icon">🌿</div> 
-        </div> 
-        <div class="metric-value" id="soilStatus">WAITING</div> 
-        <div class="metric-status">● AI ANALYSIS</div> 
-    </div> 
- 
- 
-    <div class="metric"> 
-        <div class="metric-top"> 
-            <span class="metric-label">Soil Percentage</span> 
-            <div class="metric-icon">📊</div> 
-        </div> 
-        <div class="metric-value" id="soilPercent">0%</div> 
-        <div class="metric-status">● CALCULATED</div> 
-    </div> 
- 
- 
-    <div class="metric"> 
-        <div class="metric-top"> 
-            <span class="metric-label">Water Safety</span> 
-            <div class="metric-icon">🛡️</div> 
-        </div> 
-        <div class="metric-value" id="waterSafety">NORMAL</div> 
-        <div class="metric-status">● MONITORED</div> 
-    </div> 
- 
- 
-    <div class="metric"> 
-        <div class="metric-top"> 
-            <span class="metric-label">Farm Health</span> 
-            <div class="metric-icon">❤️</div> 
-        </div> 
-        <div class="metric-value" id="farmHealth">GOOD</div> 
-        <div class="metric-status">● AI ASSESSMENT</div> 
-    </div> 
- 
- 
-    <div class="metric"> 
-        <div class="metric-top"> 
-            <span class="metric-label">System Health</span> 
-            <div class="metric-icon">✓</div> 
-        </div> 
-        <div class="metric-value" id="systemHealth">ONLINE</div> 
-        <div class="metric-status">● CONNECTIVITY</div> 
-    </div> 
- 
- 
-</div> 
- 
- 
-<!-- ================= ANALYTICS ================= --> 
- 
-<div class="section-head" id="analytics"> 
- 
-    <div> 
-        <h2>Advanced Analytics</h2> 
-        <p>Live sensor trends and farm performance indicators</p> 
-    </div> 
- 
-</div> 
- 
- 
-<div class="charts-grid"> 
- 
- 
-    <!-- GRAPH 1 --> 
- 
-    <div class="chart-card"> 
- 
-        <div class="chart-head"> 
- 
-            <div> 
-                <h3>Temperature Trend</h3> 
-                <p>Live environmental temperature</p> 
-            </div> 
- 
-            <span class="metric-status">LIVE</span> 
- 
-        </div> 
- 
-        <div class="chart-box chart-small"> 
-            <canvas id="temperatureChart"></canvas> 
-        </div> 
- 
-    </div> 
- 
- 
-    <!-- GRAPH 2 --> 
- 
-    <div class="chart-card"> 
- 
-        <div class="chart-head"> 
- 
-            <div> 
-                <h3>Humidity Trend</h3> 
-                <p>Atmospheric humidity</p> 
-            </div> 
- 
-            <span class="metric-status">LIVE</span> 
- 
-        </div> 
- 
-        <div class="chart-box chart-small"> 
-            <canvas id="humidityChart"></canvas> 
-        </div> 
- 
-    </div> 
- 
- 
-    <!-- GRAPH 3 --> 
- 
-    <div class="chart-card"> 
- 
-        <div class="chart-head"> 
- 
-            <div> 
-                <h3>Soil Moisture</h3> 
-                <p>Raw ADC sensor behaviour</p> 
-            </div> 
- 
-            <span class="metric-status">LIVE</span> 
- 
-        </div> 
- 
-        <div class="chart-box chart-small"> 
-            <canvas id="soilChart"></canvas> 
-        </div> 
- 
-    </div> 
- 
- 
-    <!-- GRAPH 4 --> 
- 
-    <div class="chart-card"> 
- 
-        <div class="chart-head"> 
- 
-            <div> 
-                <h3>Water Distance</h3> 
-                <p>Ultrasonic water monitoring</p> 
-            </div> 
- 
-            <span class="metric-status">LIVE</span> 
- 
-        </div> 
- 
-        <div class="chart-box chart-small"> 
-            <canvas id="waterChart"></canvas> 
-        </div> 
- 
-    </div> 
- 
- 
-    <!-- GRAPH 5 --> 
- 
-    <div class="chart-card wide"> 
- 
-        <div class="chart-head"> 
- 
-            <div> 
-                <h3>Farm Environment Overview</h3> 
-                <p>Combined temperature, humidity and soil readings</p> 
-            </div> 
- 
-            <span class="metric-status">REAL-TIME</span> 
- 
-        </div> 
- 
-        <div class="chart-box"> 
-            <canvas id="overviewChart"></canvas> 
-        </div> 
- 
-    </div> 
- 
-</div> 
- 
- 
-<!-- ================= LOWER INFORMATION ================= --> 
- 
-<div class="section-head"> 
- 
-    <div> 
-        <h2>Farm Operations</h2> 
-        <p>Crop health, resources and predictive intelligence</p> 
-    </div> 
- 
-</div> 
- 
- 
-<div class="lower-grid"> 
- 
- 
-    <!-- CROP HEALTH --> 
- 
-    <div class="info-card"> 
- 
-        <h3>Crop Health</h3> 
- 
-        <p>Current farm condition based on sensor observations</p> 
- 
- 
-        <div class="progress-row"> 
- 
-            <div class="progress-info"> 
-                <strong>Soil Condition</strong> 
-                <span id="soilHealthText">NORMAL</span> 
-            </div> 
- 
-            <div class="progress"> 
-                <div id="soilFill" style="width:40%"></div> 
-            </div> 
- 
-        </div> 
- 
- 
-        <div class="progress-row"> 
- 
-            <div class="progress-info"> 
-                <strong>Environmental Stability</strong> 
-                <span>92%</span> 
-            </div> 
- 
-            <div class="progress"> 
-                <div style="width:92%"></div> 
-            </div> 
- 
-        </div> 
- 
- 
-        <div class="progress-row"> 
- 
-            <div class="progress-info"> 
-                <strong>Water Availability</strong> 
-                <span id="waterHealth">GOOD</span> 
-            </div> 
- 
-            <div class="progress"> 
-                <div id="waterFill" style="width:75%"></div> 
-            </div> 
- 
-        </div> 
- 
-    </div> 
- 
- 
-    <!-- RESOURCE USAGE --> 
- 
-    <div class="info-card"> 
- 
-        <h3>Resource Usage</h3> 
- 
-        <p>Current operational resources</p> 
- 
- 
-        <div class="resource"> 
-            <span>Water Monitoring</span> 
-            <strong id="resourceWater">ACTIVE</strong> 
-        </div> 
- 
-        <div class="resource"> 
-            <span>Irrigation Pump</span> 
-            <strong id="resourcePump">OFF</strong> 
-        </div> 
- 
-        <div class="resource"> 
-            <span>Sensor Network</span> 
-            <strong>ONLINE</strong> 
-        </div> 
- 
-        <div class="resource"> 
-            <span>Cloud Connection</span> 
-            <strong>ONLINE</strong> 
-        </div> 
- 
-        <div class="resource"> 
-            <span>Data Refresh</span> 
-            <strong>3 SEC</strong> 
-        </div> 
- 
-    </div> 
- 
- 
-    <!-- YIELD --> 
- 
-    <div class="info-card"> 
- 
-        <h3>Yield Intelligence</h3> 
- 
-        <p>AI-assisted agricultural indicators</p> 
- 
- 
-        <div class="resource"> 
-            <span>Crop Health</span> 
-            <strong id="yieldHealth">GOOD</strong> 
-        </div> 
- 
-        <div class="resource"> 
-            <span>Soil Condition</span> 
-            <strong id="yieldSoil">NORMAL</strong> 
-        </div> 
- 
-        <div class="resource"> 
-            <span>Environment</span> 
-            <strong>STABLE</strong> 
-        </div> 
- 
-        <div class="resource"> 
-            <span>Irrigation Need</span> 
-            <strong id="yieldIrrigation">LOW</strong> 
-        </div> 
- 
-        <div class="resource"> 
-            <span>Prediction Engine</span> 
-            <strong>READY</strong> 
-        </div> 
- 
-    </div> 
- 
-</div> 
- 
- 
-<!-- ================= AI ================= --> 
- 
-<section class="ai-panel"> 
- 
-    <div class="ai-head"> 
- 
-        <div class="ai-icon">✦</div> 
- 
-        <div> 
-            <h3>AI Farm Recommendations</h3> 
-            <p>Decision support generated from current farm conditions</p> 
-        </div> 
- 
-    </div> 
- 
- 
-    <div class="ai-grid"> 
- 
-        <div class="ai-item"> 
-            <strong>🌱 Soil Insight</strong> 
-            <span id="aiSoil"> 
-                Soil moisture is currently being monitored. 
-            </span> 
-        </div> 
- 
-        <div class="ai-item"> 
-            <strong>💧 Irrigation Insight</strong> 
-            <span id="aiWater"> 
-                Water monitoring is active. 
-            </span> 
-        </div> 
- 
-        <div class="ai-item"> 
-            <strong>🌤 Environment Insight</strong> 
-            <span id="aiEnvironment"> 
-                Temperature and humidity are being analysed. 
-            </span> 
-        </div> 
- 
-    </div> 
- 
-</section> 
- 
- 
-<!-- ================= IRRIGATION ================= --> 
- 
-<section class="irrigation-panel" id="irrigation"> 
- 
-    <div class="irrigation-info"> 
- 
-        <h3>Smart Irrigation Control</h3> 
- 
-        <p> 
-            Monitor current pump state and control the irrigation workflow. 
-        </p> 
- 
-    </div> 
- 
- 
-    <div class="irrigation-status"> 
- 
-        <span class="dot" id="pumpDot"></span> 
- 
-        <span id="pumpControlStatus"> 
-            Pump status: WAITING 
-        </span> 
- 
-    </div> 
- 
- 
-    <button class="pump-btn" id="pumpButton"> 
-        START IRRIGATION 
-    </button> 
- 
-</section> 
- 
- 
-<!-- ================= QUICK ACTIONS ================= --> 
- 
-<div class="section-head" id="reports"> 
- 
-    <div> 
-        <h2>Quick Actions</h2> 
-        <p>Farm management shortcuts</p> 
-    </div> 
- 
-</div> 
- 
- 
-<div class="actions"> 
- 
-    <button class="action-btn" id="farmViewBtn"> 
-        <strong>🌾 Farm Cameras</strong> 
-        <span>Open connected farm view</span> 
-    </button> 
- 
-    <button class="action-btn" id="reportBtn"> 
-        <strong>📄 Generate Report</strong> 
-        <span>Prepare current farm report</span> 
-    </button> 
- 
-    <button class="action-btn" id="aiBtn"> 
-        <strong>✦ AI Recommendations</strong> 
-        <span>Analyse current conditions</span> 
-    </button> 
- 
-    <button class="action-btn" id="analyticsBtn"> 
-        <strong>📊 View Analytics</strong> 
-        <span>Explore sensor trends</span> 
-    </button> 
- 
-</div> 
- 
- 
-<!-- ================= FOOTER ================= --> 
- 
-<footer class="footer"> 
- 
-    <span>🌱 AgriSense AIoT • Intelligent Agriculture Monitoring</span> 
- 
-    <span id="lastUpdate"> 
-        Waiting for ESP32 data... 
-    </span> 
- 
-</footer> 
- 
- 
-</div> 
- 
-</main> 
- 
-</div> 
- 
- 
-<div class="toast" id="toast"> 
-    Action completed 
-</div> 
- 
- 
-<script> 
- 
-/* ========================================================= 
-   AGRISENSE LIVE DATA SYSTEM 
-========================================================= */ 
- 
-const DATA_URL = "/data"; 
- 
-const MAX_POINTS = 20; 
- 
-const labels = []; 
- 
-const temperatureData = []; 
-const humidityData = []; 
-const soilData = []; 
-const waterData = []; 
- 
- 
-/* ========================================================= 
-   CHART DEFAULTS 
-========================================================= */ 
- 
-Chart.defaults.color = "#7f8d87"; 
-Chart.defaults.borderColor = "rgba(255,255,255,.06)"; 
-Chart.defaults.font.family = "Segoe UI, Arial, sans-serif"; 
-Chart.defaults.font.size = 9; 
- 
- 
-/* ========================================================= 
-   CHART CREATOR 
-========================================================= */ 
- 
-function createChart( 
-    canvasId, 
-    label, 
-    data, 
-    color, 
-    beginAtZero = false 
-){ 
- 
-    const canvas = document.getElementById(canvasId); 
- 
-    if(!canvas){ 
-        return null; 
-    } 
- 
-    return new Chart( 
-        canvas.getContext("2d"), 
-        { 
-            type:"line", 
- 
-            data:{ 
-                labels:labels, 
- 
-                datasets:[ 
-                    { 
-                        label:label, 
-                        data:data, 
- 
-                        borderColor:color, 
- 
-                        backgroundColor:"rgba(126,231,135,.06)", 
- 
-                        borderWidth:2, 
- 
-                        pointRadius:0, 
- 
-                        pointHoverRadius:4, 
- 
-                        tension:.35, 
- 
-                        fill:true 
-                    } 
-                ] 
-            }, 
- 
-            options:{ 
-                responsive:true, 
- 
-                maintainAspectRatio:false, 
- 
-                animation:{ 
-                    duration:450 
-                }, 
- 
-                plugins:{ 
-                    legend:{ 
-                        display:false 
-                    } 
-                }, 
- 
-                scales:{ 
-                    x:{ 
-                        grid:{ 
-                            display:false 
-                        }, 
- 
-                        ticks:{ 
-                            maxTicksLimit:7, 
-                            color:"#64716c" 
-                        } 
-                    }, 
- 
-                    y:{ 
-                        beginAtZero:beginAtZero, 
- 
-                        grid:{ 
-                            color:"rgba(255,255,255,.05)" 
-                        }, 
- 
-                        ticks:{ 
-                            color:"#64716c" 
-                        } 
-                    } 
-                } 
-            } 
-        } 
-    ); 
-} 
- 
- 
-/* ========================================================= 
-   CREATE ALL 5 CHARTS 
-========================================================= */ 
- 
-let temperatureChart = 
-    createChart( 
-        "temperatureChart", 
-        "Temperature", 
-        temperatureData, 
-        "#7ee787" 
-    ); 
- 
- 
-let humidityChart = 
-    createChart( 
-        "humidityChart", 
-        "Humidity", 
-        humidityData, 
-        "#5ee7d0", 
-        true 
-    ); 
- 
- 
-let soilChart = 
-    createChart( 
-        "soilChart", 
-        "Soil Moisture", 
-        soilData, 
-        "#b6d96c", 
-        true 
-    ); 
- 
- 
-let waterChart = 
-    createChart( 
-        "waterChart", 
-        "Water Distance", 
-        waterData, 
-        "#62b8ff", 
-        true 
-    ); 
- 
- 
-let overviewChart = null; 
- 
-const overviewCanvas = 
-    document.getElementById("overviewChart"); 
- 
- 
-if(overviewCanvas){ 
- 
-    overviewChart = 
-        new Chart( 
-            overviewCanvas.getContext("2d"), 
-            { 
-                type:"line", 
- 
-                data:{ 
-                    labels:labels, 
- 
-                    datasets:[ 
-                        { 
-                            label:"Temperature", 
-                            data:temperatureData, 
-                            borderColor:"#7ee787", 
-                            borderWidth:2, 
-                            pointRadius:0, 
-                            tension:.35 
-                        }, 
- 
-                        { 
-                            label:"Humidity", 
-                            data:humidityData, 
-                            borderColor:"#5ee7d0", 
-                            borderWidth:2, 
-                            pointRadius:0, 
-                            tension:.35 
-                        } 
-                    ] 
-                }, 
- 
-                options:{ 
-                    responsive:true, 
-                    maintainAspectRatio:false, 
- 
-                    animation:{ 
-                        duration:450 
-                    }, 
- 
-                    plugins:{ 
-                        legend:{ 
-                            display:true, 
- 
-                            labels:{ 
-                                boxWidth:10, 
-                                usePointStyle:true 
-                            } 
-                        } 
-                    }, 
- 
-                    scales:{ 
-                        x:{ 
-                            grid:{ 
-                                display:false 
-                            } 
-                        }, 
- 
-                        y:{ 
-                            grid:{ 
-                                color:"rgba(255,255,255,.05)" 
-                            } 
-                        } 
-                    } 
-                } 
-            } 
-        ); 
-} 
- 
- 
-/* ========================================================= 
-   UPDATE CHARTS 
-========================================================= */ 
- 
-function updateCharts(){ 
- 
-    if(temperatureChart){ 
-        temperatureChart.update("none"); 
-    } 
- 
-    if(humidityChart){ 
-        humidityChart.update("none"); 
-    } 
- 
-    if(soilChart){ 
-        soilChart.update("none"); 
-    } 
- 
-    if(waterChart){ 
-        waterChart.update("none"); 
-    } 
- 
-    if(overviewChart){ 
-        overviewChart.update("none"); 
-    } 
-} 
- 
- 
-/* ========================================================= 
-   NUMBER HELPERS 
-========================================================= */ 
- 
-function safeNumber(value, fallback = 0){ 
- 
-    const number = Number(value); 
- 
-    if(Number.isFinite(number)){ 
-        return number; 
-    } 
- 
-    return fallback; 
-} 
- 
- 
-/* ========================================================= 
-   TIME LABEL 
-========================================================= */ 
- 
-function getTimeLabel(){ 
- 
-    const now = new Date(); 
- 
-    return now.toLocaleTimeString( 
-        [], 
-        { 
-            hour:"2-digit", 
-            minute:"2-digit", 
-            second:"2-digit" 
-        } 
-    ); 
-} 
- 
- 
-/* ========================================================= 
-   SOIL PERCENTAGE 
-========================================================= */ 
- 
-function soilPercentage(soil){ 
- 
-    const percent = 
-        (soil / 4095) * 100; 
- 
-    return Math.max( 
-        0, 
-        Math.min( 
-            100, 
-            percent 
-        ) 
-    ); 
-} 
- 
- 
-/* ========================================================= 
-   UPDATE FARM UI 
-========================================================= */ 
- 
-function updateFarmUI(data){ 
- 
-    const temperature = 
-        safeNumber(data.temperature); 
- 
-    const humidity = 
-        safeNumber(data.humidity); 
- 
-    const soil = 
-        safeNumber( 
-            data.soil ?? 
-            data.soil_moisture 
-        ); 
- 
-    const water = 
-        safeNumber( 
-            data.water_distance 
-        ); 
- 
-    const pump = 
-        Boolean(data.pump_status); 
- 
-    const soilStatus = 
-        data.soil_status || 
-        "UNKNOWN"; 
- 
- 
-    /* main cards */ 
- 
-    document.getElementById( 
-        "temperature" 
-    ).textContent = 
-        temperature.toFixed(1); 
- 
- 
-    document.getElementById( 
-        "humidity" 
-    ).textContent = 
-        humidity.toFixed(1); 
- 
- 
-    document.getElementById( 
-        "soil" 
-    ).textContent = 
-        Math.round(soil); 
- 
- 
-    document.getElementById( 
-        "waterDistance" 
-    ).textContent = 
-        water.toFixed(1); 
- 
- 
-    document.getElementById( 
-        "pump" 
-    ).textContent = 
-        pump ? "ON" : "OFF"; 
- 
- 
-    document.getElementById( 
-        "soilStatus" 
-    ).textContent = 
-        soilStatus; 
- 
- 
-    document.getElementById( 
-        "soilStatusMini" 
-    ).textContent = 
-        "● " + soilStatus; 
- 
- 
-    /* percentage */ 
- 
-    const percent = 
-        soilPercentage(soil); 
- 
- 
-    document.getElementById( 
-        "soilPercent" 
-    ).textContent = 
-        Math.round(percent) + "%"; 
- 
- 
-    const soilFill = 
-        document.getElementById( 
-            "soilFill" 
-        ); 
- 
- 
-    if(soilFill){ 
- 
-        soilFill.style.width = 
-            Math.round(percent) + "%"; 
- 
-    } 
- 
- 
-    /* farm visualization */ 
- 
-    document.getElementById( 
-        "farmSoil" 
-    ).textContent = 
-        Math.round(soil) + " RAW"; 
- 
- 
-    document.getElementById( 
-        "farmTemp" 
-    ).textContent = 
-        temperature.toFixed(1) + " °C"; 
- 
- 
-    document.getElementById( 
-        "farmWater" 
-    ).textContent = 
-        water.toFixed(1) + " cm"; 
- 
- 
-    document.getElementById( 
-        "farmHumidity" 
-    ).textContent = 
-        humidity.toFixed(1) + " %"; 
- 
- 
-    /* weather */ 
- 
-    document.getElementById( 
-        "weatherTemp" 
-    ).textContent = 
-        temperature.toFixed(1); 
- 
- 
-    document.getElementById( 
-        "weatherHumidity" 
-    ).textContent = 
-        Math.round(humidity) + "%"; 
- 
- 
-    document.getElementById( 
-        "weatherSoil" 
-    ).textContent = 
-        Math.round(soil); 
- 
- 
-    document.getElementById( 
-        "weatherWater" 
-    ).textContent = 
-        water.toFixed(0) + " cm"; 
- 
- 
-    document.getElementById( 
-        "weatherPump" 
-    ).textContent = 
-        pump ? "ON" : "OFF"; 
- 
- 
-    /* system health */ 
- 
-    document.getElementById( 
-        "systemHealth" 
-    ).textContent = 
-        "ONLINE"; 
- 
- 
-    /* water safety */ 
- 
-    const waterSafety = 
-        document.getElementById( 
-            "waterSafety" 
-        ); 
- 
- 
-    if(waterSafety){ 
- 
-        waterSafety.textContent = 
-            water > 450 
-                ? "LOW" 
-                : "NORMAL"; 
- 
-    } 
- 
- 
-    /* crop health */ 
- 
-    let health = "GOOD"; 
- 
-    if( 
-        soilStatus === "DRY" || 
-        percent < 25 
-    ){ 
- 
-        health = "WATCH"; 
- 
-    } 
- 
-    if( 
-        soilStatus === "WET" || 
-        percent > 80 
-    ){ 
- 
-        health = "MONITOR"; 
- 
-    } 
- 
- 
-    document.getElementById( 
-        "farmHealth" 
-    ).textContent = 
-        health; 
- 
- 
-    document.getElementById( 
-        "yieldHealth" 
-    ).textContent = 
-        health; 
- 
- 
-    document.getElementById( 
-        "yieldSoil" 
-    ).textContent = 
-        soilStatus; 
- 
- 
-    /* water progress */ 
- 
-    const waterFill = 
-        document.getElementById( 
-            "waterFill" 
-        ); 
- 
- 
-    if(waterFill){ 
- 
-        const waterPercent = 
-            Math.max( 
-                10, 
-                Math.min( 
-                    100, 
-                    100 - ( 
-                        water / 500 * 100 
-                    ) 
-                ) 
-            ); 
- 
-        waterFill.style.width = 
-            waterPercent + "%"; 
- 
-    } 
- 
- 
-    document.getElementById( 
-        "waterHealth" 
-    ).textContent = 
-        water > 450 
-            ? "LOW" 
-            : "GOOD"; 
- 
- 
-    /* irrigation */ 
- 
-    document.getElementById( 
-        "resourcePump" 
-    ).textContent = 
-        pump ? "ON" : "OFF"; 
- 
- 
-    document.getElementById( 
-        "pumpControlStatus" 
-    ).textContent = 
-        "Pump status: " + 
-        (pump ? "ACTIVE" : "OFF"); 
- 
- 
-    const pumpDot = 
-        document.getElementById( 
-            "pumpDot" 
-        ); 
- 
- 
-    pumpDot.classList.toggle( 
-        "online", 
-        pump 
-    ); 
- 
- 
-    /* AI recommendations */ 
- 
-    const aiSoil = 
-        document.getElementById( 
-            "aiSoil" 
-        ); 
- 
- 
-    const aiWater = 
-        document.getElementById( 
-            "aiWater" 
-        ); 
- 
- 
-    const aiEnvironment = 
-        document.getElementById( 
-            "aiEnvironment" 
-        ); 
- 
- 
-    if(soilStatus === "DRY"){ 
- 
-        aiSoil.textContent = 
-            "Soil moisture is below the preferred range. Consider irrigation monitoring."; 
- 
-        document.getElementById( 
-            "yieldIrrigation" 
-        ).textContent = 
-            "RECOMMENDED"; 
- 
-    } 
-    else if(soilStatus === "WET"){ 
- 
-        aiSoil.textContent = 
-            "Soil moisture is high. Avoid unnecessary irrigation."; 
- 
-        document.getElementById( 
-            "yieldIrrigation" 
-        ).textContent = 
-            "LOW"; 
- 
-    } 
-    else{ 
- 
-        aiSoil.textContent = 
-            "Soil moisture is within the current normal monitoring range."; 
- 
-        document.getElementById( 
-            "yieldIrrigation" 
-        ).textContent = 
-            "LOW"; 
- 
-    } 
- 
- 
-    if(water > 450){ 
- 
-        aiWater.textContent = 
-            "Water distance is relatively high. Check reservoir availability."; 
- 
-    } 
-    else{ 
- 
-        aiWater.textContent = 
-            "Water monitoring indicates the current level is within the monitored range."; 
- 
-    } 
- 
- 
-    aiEnvironment.textContent = 
-        "Current temperature is " + 
-        temperature.toFixed(1) + 
-        "°C with " + 
-        humidity.toFixed(1) + 
-        "% humidity."; 
- 
- 
-    /* alerts */ 
- 
-    updateAlerts( 
-        soilStatus, 
-        water, 
-        pump 
-    ); 
- 
-} 
- 
- 
-/* ========================================================= 
-   ALERT SYSTEM 
-========================================================= */ 
- 
-function updateAlerts( 
-    soilStatus, 
-    water, 
-    pump 
-){ 
- 
-    const alerts = 
-        document.getElementById( 
-            "alerts" 
-        ); 
- 
-    let active = 0; 
- 
-    let html = ""; 
- 
- 
-    if(soilStatus === "DRY"){ 
- 
-        active++; 
- 
-        html += ` 
-            <div class="alert"> 
-                <div class="alert-icon">⚠</div> 
-                <div> 
-                    <strong>Soil moisture low</strong> 
-                    <span>Monitor irrigation requirement</span> 
-                </div> 
-            </div> 
-        `; 
- 
-    } 
-    else{ 
- 
-        html += ` 
-            <div class="alert"> 
-                <div class="alert-icon">✓</div> 
-                <div> 
-                    <strong>Soil condition ${soilStatus}</strong> 
-                    <span>Current soil reading is being monitored</span> 
-                </div> 
-            </div> 
-        `; 
- 
-    } 
- 
- 
-    if(water > 450){ 
- 
-        active++; 
- 
-        html += ` 
-            <div class="alert"> 
-                <div class="alert-icon">💧</div> 
-                <div> 
-                    <strong>Water level requires attention</strong> 
-                    <span>Distance reading: ${water.toFixed(1)} cm</span> 
-                </div> 
-            </div> 
-        `; 
- 
-    } 
-    else{ 
- 
-        html += ` 
-            <div class="alert"> 
-                <div class="alert-icon">💧</div> 
-                <div> 
-                    <strong>Water monitoring normal</strong> 
-                    <span>Distance: ${water.toFixed(1)} cm</span> 
-                </div> 
-            </div> 
-        `; 
- 
-    } 
- 
- 
-    html += ` 
-        <div class="alert"> 
-            <div class="alert-icon">${pump ? "⚙" : "✓"}</div> 
-            <div> 
-                <strong>Pump ${pump ? "active" : "inactive"}</strong> 
-                <span>ESP32 irrigation control state</span> 
-            </div> 
-        </div> 
-    `; 
- 
- 
-    alerts.innerHTML = 
-        html; 
- 
- 
-    document.getElementById( 
-        "alertCount" 
-    ).textContent = 
-        active + " ACTIVE"; 
- 
-} 
- 
- 
-/* ========================================================= 
-   CONNECTION STATE 
-========================================================= */ 
- 
-function setConnection( 
-    online 
-){ 
- 
-    const dot = 
-        document.getElementById( 
-            "sideDot" 
-        ); 
- 
- 
-    const topDot = 
-        document.getElementById( 
-            "topLiveDot" 
-        ); 
- 
- 
-    const sideText = 
-        document.getElementById( 
-            "sideConnection" 
-        ); 
- 
- 
-    const topText = 
-        document.getElementById( 
-            "topConnection" 
-        ); 
- 
- 
-    dot.classList.toggle( 
-        "online", 
-        online 
-    ); 
- 
- 
-    dot.classList.toggle( 
-        "offline", 
-        !online 
-    ); 
- 
- 
-    sideText.textContent = 
-        online 
-            ? "ESP32 Online" 
-            : "ESP32 Offline"; 
- 
- 
-    topText.textContent = 
-        online 
-            ? "ESP32 ONLINE" 
-            : "ESP32 OFFLINE"; 
- 
-} 
- 
- 
-/* ========================================================= 
-   FETCH LIVE DATA 
-========================================================= */ 
- 
-async function loadData(){ 
- 
-    try{ 
- 
-        const response = 
-            await fetch( 
-                DATA_URL + 
-                "?t=" + 
-                Date.now(), 
-                { 
-                    method:"GET", 
-                    cache:"no-store" 
-                } 
-            ); 
- 
- 
-        if(!response.ok){ 
- 
-            throw new Error( 
-                "HTTP " + 
-                response.status 
-            ); 
- 
-        } 
- 
- 
-        const data = 
-            await response.json(); 
- 
- 
-        const temperature = 
-            safeNumber( 
-                data.temperature 
-            ); 
- 
- 
-        const humidity = 
-            safeNumber( 
-                data.humidity 
-            ); 
- 
- 
-        const soil = 
-            safeNumber( 
-                data.soil ?? 
-                data.soil_moisture 
-            ); 
- 
- 
-        const water = 
-            safeNumber( 
-                data.water_distance 
-            ); 
- 
- 
-        /* history */ 
- 
-        labels.push( 
-            getTimeLabel() 
-        ); 
- 
- 
-        temperatureData.push( 
-            temperature 
-        ); 
- 
- 
-        humidityData.push( 
-            humidity 
-        ); 
- 
- 
-        soilData.push( 
-            soil 
-        ); 
- 
- 
-        waterData.push( 
-            water 
-        ); 
- 
- 
-        while( 
-            labels.length > 
-            MAX_POINTS 
-        ){ 
- 
-            labels.shift(); 
-            temperatureData.shift(); 
-            humidityData.shift(); 
-            soilData.shift(); 
-            waterData.shift(); 
- 
-        } 
- 
- 
-        updateFarmUI( 
-            data 
-        ); 
- 
- 
-        updateCharts(); 
- 
- 
-        setConnection( 
-            true 
-        ); 
- 
- 
-        const serverTime = 
-            data.time || 
-            new Date().toLocaleString(); 
- 
- 
-        document.getElementById( 
-            "lastUpdate" 
-        ).textContent = 
-            "Last update: " + 
-            serverTime; 
- 
- 
-    } 
-    catch(error){ 
- 
-        console.error( 
-            "Dashboard data error:", 
-            error 
-        ); 
- 
- 
-        setConnection( 
-            false 
-        ); 
- 
- 
-        document.getElementById( 
-            "systemHealth" 
-        ).textContent = 
-            "OFFLINE"; 
- 
- 
-        document.getElementById( 
-            "lastUpdate" 
-        ).textContent = 
-            "Connection unavailable"; 
- 
-    } 
- 
-} 
- 
- 
-/* ========================================================= 
-   REFRESH BUTTON 
-========================================================= */ 
- 
-document.getElementById( 
-    "refreshBtn" 
-).addEventListener( 
-    "click", 
-    loadData 
-); 
- 
- 
-/* ========================================================= 
-   PUMP BUTTON 
-========================================================= */ 
- 
-let localPumpState = false; 
- 
-const pumpButton = 
-    document.getElementById( 
-        "pumpButton" 
-    ); 
- 
- 
-pumpButton.addEventListener( 
-    "click", 
-    function(){ 
- 
-        localPumpState = 
-            !localPumpState; 
- 
- 
-        if(localPumpState){ 
- 
-            pumpButton.textContent = 
-                "STOP IRRIGATION"; 
- 
-            pumpButton.classList.add( 
-                "active" 
-            ); 
- 
-            showToast( 
-                "Irrigation active in dashboard control" 
-            ); 
- 
-        } 
-        else{ 
- 
-            pumpButton.textContent = 
-                "START IRRIGATION"; 
- 
-            pumpButton.classList.remove( 
-                "active" 
-            ); 
- 
-            showToast( 
-                "Irrigation control stopped" 
-            ); 
- 
-        } 
- 
-    } 
-); 
- 
- 
-/* ========================================================= 
-   QUICK ACTIONS 
-========================================================= */ 
- 
-function showToast(message){ 
- 
-    const toast = 
-        document.getElementById( 
-            "toast" 
-        ); 
- 
- 
-    toast.textContent = 
-        message; 
- 
- 
-    toast.classList.add( 
-        "show" 
-    ); 
- 
- 
-    setTimeout( 
-        function(){ 
- 
-            toast.classList.remove( 
-                "show" 
-            ); 
- 
-        }, 
-        2200 
-    ); 
- 
-} 
- 
- 
-document.getElementById( 
-    "farmViewBtn" 
-).addEventListener( 
-    "click", 
-    function(){ 
- 
-        document.getElementById( 
-            "monitoring" 
-        ).scrollIntoView({ 
-            behavior:"smooth" 
-        }); 
- 
-        showToast( 
-            "Digital farm view opened" 
-        ); 
- 
-    } 
-); 
- 
- 
-document.getElementById( 
-    "reportBtn" 
-).addEventListener( 
-    "click", 
-    function(){ 
- 
-        showToast( 
-            "Farm report module ready" 
-        ); 
- 
-    } 
-); 
- 
- 
-document.getElementById( 
-    "aiBtn" 
-).addEventListener( 
-    "click", 
-    function(){ 
- 
-        document.querySelector( 
-            ".ai-panel" 
-        ).scrollIntoView({ 
-            behavior:"smooth" 
-        }); 
- 
-        showToast( 
-            "AI recommendations opened" 
-        ); 
- 
-    } 
-); 
- 
- 
-document.getElementById( 
-    "analyticsBtn" 
-).addEventListener( 
-    "click", 
-    function(){ 
- 
-        document.getElementById( 
-            "analytics" 
-        ).scrollIntoView({ 
-            behavior:"smooth" 
-        }); 
- 
-        showToast( 
-            "Analytics opened" 
-        ); 
- 
-    } 
-); 
- 
- 
-/* ========================================================= 
-   SIDEBAR NAVIGATION 
-========================================================= */ 
- 
-document.querySelectorAll( 
-    ".nav button" 
-).forEach( 
-    function(button){ 
- 
-        button.addEventListener( 
-            "click", 
-            function(){ 
- 
-                document.querySelectorAll( 
-                    ".nav button" 
-                ).forEach( 
-                    function(item){ 
-                        item.classList.remove( 
-                            "active" 
-                        ); 
-                    } 
-                ); 
- 
- 
-                button.classList.add( 
-                    "active" 
-                ); 
- 
- 
-                const section = 
-                    button.dataset.section; 
- 
- 
-                let target = null; 
- 
- 
-                if(section === "home"){ 
-                    target = 
-                        document.getElementById( 
-                            "home" 
-                        ); 
-                } 
- 
- 
-                if(section === "monitoring"){ 
-                    target = 
-                        document.getElementById( 
-                            "monitoring" 
-                        ); 
-                } 
- 
- 
-                if(section === "analytics"){ 
-                    target = 
-                        document.getElementById( 
-                            "analytics" 
-                        ); 
-                } 
- 
- 
-                if(section === "reports"){ 
-                    target = 
-                        document.getElementById( 
-                            "reports" 
-                        ); 
-                } 
- 
- 
-                if(section === "irrigation"){ 
-                    target = 
-                        document.getElementById( 
-                            "irrigation" 
-                        ); 
-                } 
- 
- 
-                if(section === "settings"){ 
- 
-                    showToast( 
-                        "Settings module ready" 
-                    ); 
- 
-                    return; 
- 
-                } 
- 
- 
-                if(target){ 
- 
-                    target.scrollIntoView({ 
-                        behavior:"smooth" 
-                    }); 
- 
-                } 
- 
-            } 
-        ); 
- 
-    } 
-); 
- 
- 
-/* ========================================================= 
-   DATE 
-========================================================= */ 
- 
-function updateDate(){ 
- 
-    const now = 
-        new Date(); 
- 
- 
-    document.getElementById( 
-        "currentDate" 
-    ).textContent = 
-        now.toLocaleDateString( 
-            "en-IN", 
-            { 
-                day:"numeric", 
-                month:"long", 
-                year:"numeric" 
-            } 
-        ); 
- 
-} 
- 
- 
-updateDate(); 
- 
- 
-/* ========================================================= 
-   FIRST LOAD 
-========================================================= */ 
- 
-loadData(); 
- 
- 
-/* ========================================================= 
-   LIVE REFRESH 
-========================================================= */ 
- 
-setInterval( 
-    loadData, 
-    3000 
-); 
- 
-</script> 
- 
-</body> 
+*{
+ box-sizing:border-box;
+ scroll-behavior:smooth;
+}
+
+body{
+ margin:0;
+ background:
+ radial-gradient(circle at 75% 0%,rgba(50,255,170,.13),transparent 25%),
+ radial-gradient(circle at 10% 70%,rgba(40,190,255,.09),transparent 30%),
+ var(--bg);
+ color:var(--text);
+ font-family:Segoe UI,Arial,sans-serif;
+}
+
+.layout{
+ display:flex;
+ min-height:100vh;
+}
+
+.sidebar{
+ position:fixed;
+ left:0;
+ top:0;
+ bottom:0;
+ width:225px;
+ padding:20px 13px;
+ background:rgba(2,10,7,.96);
+ border-right:1px solid var(--line);
+ z-index:50;
+ overflow:auto;
+}
+
+.brand{
+ display:flex;
+ gap:10px;
+ align-items:center;
+ margin-bottom:26px;
+}
+
+.brand-icon{
+ width:44px;
+ height:44px;
+ border-radius:14px;
+ display:grid;
+ place-items:center;
+ background:linear-gradient(145deg,#55ffae,#087c56);
+ font-size:22px;
+ color:#02120c;
+}
+
+.brand h2{
+ margin:0;
+ font-size:17px;
+}
+
+.brand small{
+ font-size:8px;
+ letter-spacing:1.5px;
+ color:var(--muted);
+}
+
+.label{
+ font-size:8px;
+ letter-spacing:1.7px;
+ color:#52766b;
+ margin:17px 9px 7px;
+}
+
+.nav{
+ display:block;
+ text-decoration:none;
+ color:var(--muted);
+ font-size:11px;
+ padding:10px 11px;
+ border-radius:10px;
+ margin:4px 0;
+}
+
+.nav:hover,
+.nav.active{
+ color:var(--green);
+ background:rgba(85,255,174,.07);
+ border:1px solid rgba(85,255,174,.13);
+}
+
+.main{
+ width:calc(100% - 225px);
+ margin-left:225px;
+ padding:20px;
+ max-width:1650px;
+}
+
+.top{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ gap:12px;
+ margin-bottom:14px;
+}
+
+.top h1{
+ margin:0;
+ font-size:24px;
+}
+
+.top p{
+ margin:4px 0;
+ color:var(--muted);
+ font-size:10px;
+}
+
+.connection{
+ white-space:nowrap;
+ padding:8px 11px;
+ border-radius:18px;
+ border:1px solid rgba(85,255,174,.2);
+ color:var(--green);
+ background:rgba(85,255,174,.05);
+ font-size:9px;
+}
+
+.dot{
+ display:inline-block;
+ width:7px;
+ height:7px;
+ border-radius:50%;
+ background:var(--green);
+ box-shadow:0 0 12px var(--green);
+ margin-right:6px;
+}
+
+.card{
+ background:linear-gradient(145deg,rgba(12,39,28,.92),rgba(4,17,12,.97));
+ border:1px solid var(--line);
+ border-radius:17px;
+ box-shadow:0 14px 34px rgba(0,0,0,.28);
+}
+
+.hero{
+ display:grid;
+ grid-template-columns:1fr 300px;
+ gap:12px;
+}
+
+.hero-card{
+ padding:20px;
+ min-height:165px;
+ overflow:hidden;
+ position:relative;
+}
+
+.eyebrow{
+ font-size:8px;
+ letter-spacing:2px;
+ color:var(--green);
+}
+
+.hero-card h2{
+ font-size:31px;
+ line-height:1.03;
+ margin:8px 0;
+}
+
+.hero-card p{
+ font-size:11px;
+ line-height:1.55;
+ color:var(--muted);
+ max-width:650px;
+}
+
+.chips{
+ display:flex;
+ gap:6px;
+ flex-wrap:wrap;
+ margin-top:13px;
+}
+
+.chip{
+ font-size:8px;
+ color:#a9c9be;
+ padding:6px 8px;
+ border-radius:8px;
+ background:rgba(255,255,255,.035);
+ border:1px solid var(--line);
+}
+
+.status{
+ padding:17px;
+}
+
+.status h3{
+ margin:0;
+ font-size:13px;
+}
+
+.online{
+ font-size:9px;
+ color:var(--green);
+}
+
+.sys{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:7px;
+ margin-top:12px;
+}
+
+.sys div{
+ padding:10px;
+ border-radius:9px;
+ background:rgba(0,0,0,.17);
+}
+
+.sys small{
+ display:block;
+ color:var(--muted);
+ font-size:7px;
+ margin-bottom:4px;
+}
+
+.sys strong{
+ font-size:10px;
+}
+
+.section{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ margin:17px 0 8px;
+}
+
+.section h2{
+ font-size:14px;
+ margin:0;
+}
+
+.section span{
+ font-size:8px;
+ color:var(--muted);
+}
+
+/* ================= 3D FARM ================= */
+
+.farm{
+ height:500px;
+ position:relative;
+ overflow:hidden;
+ background:
+ radial-gradient(circle at 50% 38%,rgba(82,255,173,.10),transparent 35%),
+ linear-gradient(180deg,#061913,#020806);
+ border-radius:18px;
+ border:1px solid var(--line);
+}
+
+.farm-topbar{
+ position:absolute;
+ left:12px;
+ right:12px;
+ top:11px;
+ z-index:20;
+ display:flex;
+ justify-content:space-between;
+ gap:8px;
+}
+
+.badge{
+ font-size:8px;
+ padding:7px 9px;
+ border-radius:9px;
+ background:rgba(2,13,9,.82);
+ border:1px solid var(--line);
+ color:#9ec7b8;
+}
+
+.badge b{
+ color:var(--green);
+}
+
+.scene{
+ position:absolute;
+ left:50%;
+ top:53%;
+ width:920px;
+ height:480px;
+ transform:
+ translate(-50%,-50%)
+ rotateX(58deg)
+ rotateZ(-28deg)
+ scale(.78);
+ transform-style:preserve-3d;
+ transition:transform .55s ease;
+}
+
+.ground{
+ position:absolute;
+ inset:0;
+ border:2px solid rgba(85,255,174,.17);
+ background:
+ repeating-linear-gradient(
+  90deg,
+  rgba(85,255,174,.06) 0 1px,
+  transparent 1px 42px
+ ),
+ repeating-linear-gradient(
+  0deg,
+  rgba(80,220,255,.05) 0 1px,
+  transparent 1px 42px
+ ),
+ linear-gradient(135deg,#0c3d2a,#08271c 55%,#061812);
+ box-shadow:0 0 90px rgba(0,255,160,.08);
+}
+
+.field{
+ position:absolute;
+ width:220px;
+ height:112px;
+ border:1px solid rgba(85,255,174,.23);
+ background:
+ repeating-linear-gradient(
+  90deg,
+  rgba(85,255,174,.20) 0 3px,
+  transparent 3px 22px
+ ),
+ repeating-linear-gradient(
+  0deg,
+  rgba(85,255,174,.07) 0 2px,
+  transparent 2px 17px
+ );
+ transform:translateZ(4px);
+}
+
+.f1{left:30px;top:35px}
+.f2{left:350px;top:35px}
+.f3{left:670px;top:35px}
+.f4{left:30px;top:180px}
+.f5{left:350px;top:180px}
+.f6{left:670px;top:180px}
+
+.fieldname{
+ position:absolute;
+ font-size:9px;
+ color:#9affcf;
+ z-index:10;
+ transform:rotateZ(28deg) rotateX(-58deg);
+}
+
+.fn1{left:88px;top:76px}
+.fn2{left:408px;top:76px}
+.fn3{left:728px;top:76px}
+.fn4{left:88px;top:221px}
+.fn5{left:408px;top:221px}
+.fn6{left:728px;top:221px}
+
+.tree{
+ position:absolute;
+ width:25px;
+ height:25px;
+ border-radius:50%;
+ background:
+ radial-gradient(
+  circle at 35% 30%,
+  #b4ffd8,
+  #22d784 48%,
+  #087c4e
+ );
+ box-shadow:0 0 14px rgba(85,255,174,.35);
+ transform:translateZ(27px);
+}
+
+.tree:after{
+ content:"";
+ position:absolute;
+ width:7px;
+ height:20px;
+ background:#70452b;
+ left:9px;
+ top:18px;
+ transform:translateZ(-12px);
+}
+
+.tr1{left:60px;top:55px}
+.tr2{left:120px;top:105px}
+.tr3{left:380px;top:55px}
+.tr4{left:440px;top:103px}
+.tr5{left:700px;top:55px}
+.tr6{left:770px;top:104px}
+
+.tree2{left:55px;top:202px}
+.tree3{left:120px;top:247px}
+.tree4{left:380px;top:202px}
+.tree5{left:445px;top:248px}
+.tree6{left:700px;top:202px}
+.tree7{left:775px;top:248px}
+
+/* buildings */
+
+.well{
+ position:absolute;
+ width:74px;
+ height:74px;
+ border-radius:50%;
+ left:265px;
+ top:300px;
+ transform:translateZ(34px);
+ background:
+ radial-gradient(
+  circle,
+  #06130e 0 37%,
+  #5a6c61 38% 48%,
+  #9b7751 49% 64%,
+  #503b29 65%
+ );
+ box-shadow:0 0 18px rgba(0,0,0,.45);
+}
+
+.well:before{
+ content:"";
+ position:absolute;
+ width:86px;
+ height:18px;
+ background:#a57b4e;
+ left:-6px;
+ top:-12px;
+ border-radius:50%;
+ box-shadow:0 0 0 4px #654a32;
+}
+
+.well:after{
+ content:"";
+ position:absolute;
+ width:3px;
+ height:64px;
+ background:#6d4b31;
+ left:35px;
+ top:-42px;
+ transform:rotate(28deg);
+ box-shadow:25px 0 0 #6d4b31;
+}
+
+.house{
+ position:absolute;
+ width:88px;
+ height:62px;
+ left:740px;
+ top:285px;
+ background:linear-gradient(90deg,#a8623d,#d18755);
+ transform:translateZ(32px);
+ box-shadow:0 12px 20px rgba(0,0,0,.3);
+}
+
+.house:before{
+ content:"";
+ position:absolute;
+ left:-9px;
+ top:-35px;
+ border-left:53px solid transparent;
+ border-right:53px solid transparent;
+ border-bottom:38px solid #59372c;
+}
+
+.house:after{
+ content:"";
+ position:absolute;
+ left:34px;
+ bottom:0;
+ width:20px;
+ height:31px;
+ background:#40271d;
+ box-shadow:-27px -18px 0 -7px #4ddcff;
+}
+
+.barn{
+ position:absolute;
+ width:72px;
+ height:52px;
+ left:560px;
+ top:315px;
+ background:#9a473d;
+ transform:translateZ(30px);
+}
+
+.barn:before{
+ content:"";
+ position:absolute;
+ left:-7px;
+ top:-28px;
+ border-left:43px solid transparent;
+ border-right:43px solid transparent;
+ border-bottom:31px solid #552d2b;
+}
+
+.barn:after{
+ content:"";
+ position:absolute;
+ width:23px;
+ height:29px;
+ left:25px;
+ bottom:0;
+ background:#381f1b;
+}
+
+.greenhouse{
+ position:absolute;
+ width:112px;
+ height:54px;
+ left:105px;
+ top:315px;
+ transform:translateZ(31px);
+ background:linear-gradient(
+  90deg,
+  rgba(60,210,180,.20),
+  rgba(100,220,255,.22)
+ );
+ border:2px solid rgba(100,235,220,.6);
+ box-shadow:0 0 22px rgba(70,220,190,.14);
+}
+
+.greenhouse:before{
+ content:"";
+ position:absolute;
+ left:0;
+ right:0;
+ top:-20px;
+ height:22px;
+ border:2px solid rgba(100,235,220,.6);
+ border-bottom:0;
+ transform:skewX(-28deg);
+}
+
+.tank{
+ position:absolute;
+ width:76px;
+ height:60px;
+ border-radius:13px;
+ left:430px;
+ top:325px;
+ transform:translateZ(42px);
+ background:linear-gradient(90deg,#2d6875,#b8f7ff,#356e7a);
+ box-shadow:0 0 22px rgba(77,220,255,.24);
+}
+
+.tank:before{
+ content:"WATER";
+ position:absolute;
+ left:17px;
+ top:24px;
+ font-size:9px;
+ font-weight:bold;
+ color:#06201d;
+}
+
+.solar{
+ position:absolute;
+ width:91px;
+ height:49px;
+ left:675px;
+ top:335px;
+ transform:translateZ(45px) rotateZ(-12deg);
+ background:linear-gradient(135deg,#102d50,#3f82c5);
+ border:2px solid #70d9ff;
+}
+
+.tractor{
+ position:absolute;
+ width:70px;
+ height:42px;
+ left:455px;
+ top:90px;
+ transform:translateZ(25px);
+ background:#d79b24;
+ border-radius:9px;
+}
+
+.tractor:before{
+ content:"";
+ position:absolute;
+ width:28px;
+ height:30px;
+ background:#2d8d66;
+ right:-17px;
+ top:-12px;
+ border-radius:4px;
+}
+
+.tractor:after{
+ content:"";
+ position:absolute;
+ width:16px;
+ height:16px;
+ border-radius:50%;
+ background:#161d1a;
+ left:7px;
+ bottom:-7px;
+ box-shadow:43px 0 #161d1a;
+}
+
+.pipe{
+ position:absolute;
+ height:7px;
+ border-radius:6px;
+ background:linear-gradient(90deg,#35d99a,#4ddcff);
+ box-shadow:0 0 11px rgba(77,220,255,.2);
+ z-index:8;
+}
+
+.p1{
+ width:400px;
+ left:465px;
+ top:355px;
+ transform:translateZ(42px);
+}
+
+.p2{
+ width:260px;
+ left:460px;
+ top:355px;
+ transform:rotateZ(90deg) translateZ(42px);
+}
+
+.p3{
+ width:300px;
+ left:190px;
+ top:265px;
+ transform:translateZ(42px);
+}
+
+.p4{
+ width:210px;
+ left:185px;
+ top:265px;
+ transform:rotateZ(90deg) translateZ(42px);
+}
+
+.sensor{
+ position:absolute;
+ width:12px;
+ height:12px;
+ border-radius:50%;
+ background:#55ffae;
+ box-shadow:0 0 16px #55ffae;
+ transform:translateZ(52px);
+ z-index:12;
+}
+
+.s1{left:140px;top:125px}
+.s2{left:455px;top:125px}
+.s3{left:770px;top:125px}
+.s4{left:455px;top:255px}
+.s5{left:300px;top:330px}
+
+.tag{
+ position:absolute;
+ z-index:14;
+ color:#e2fff2;
+ font-size:8px;
+ padding:4px 6px;
+ background:rgba(2,14,10,.84);
+ border:1px solid var(--line);
+ border-radius:5px;
+ white-space:nowrap;
+ transform:rotateZ(28deg) rotateX(-58deg);
+}
+
+.tag.w{left:260px;top:385px}
+.tag.h{left:735px;top:370px}
+.tag.t{left:420px;top:395px}
+.tag.g{left:95px;top:380px}
+
+.scan{
+ position:absolute;
+ inset:0;
+ background:linear-gradient(
+  90deg,
+  transparent,
+  rgba(85,255,174,.045),
+  transparent
+ );
+ animation:scan 5s linear infinite;
+ pointer-events:none;
+}
+
+@keyframes scan{
+ from{transform:translateX(-100%)}
+ to{transform:translateX(100%)}
+}
+
+.viewbar{
+ position:absolute;
+ right:12px;
+ bottom:11px;
+ z-index:30;
+ display:flex;
+ gap:5px;
+}
+
+.viewbar button{
+ font-size:8px;
+ padding:7px 9px;
+ border-radius:7px;
+ border:1px solid var(--line);
+ background:rgba(2,15,10,.85);
+ color:#b9d9ce;
+ cursor:pointer;
+}
+
+.viewbar button:hover{
+ color:var(--green);
+ border-color:rgba(85,255,174,.4);
+}
+
+/* cards */
+
+.metrics{
+ display:grid;
+ grid-template-columns:repeat(4,1fr);
+ gap:9px;
+}
+
+.metric{
+ padding:14px;
+ min-height:105px;
+}
+
+.metric-top{
+ display:flex;
+ justify-content:space-between;
+}
+
+.metric-icon{
+ font-size:18px;
+}
+
+.live{
+ font-size:8px;
+ color:var(--green);
+}
+
+.metric-name{
+ font-size:8px;
+ color:var(--muted);
+ margin-top:9px;
+}
+
+.metric-value{
+ font-size:23px;
+ font-weight:700;
+ margin-top:3px;
+}
+
+.unit{
+ font-size:8px;
+ color:var(--muted);
+ font-weight:400;
+}
+
+.grid3{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:9px;
+}
+
+.grid2{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:9px;
+}
+
+.box{
+ padding:15px;
+}
+
+.box h3{
+ font-size:12px;
+ margin:0 0 10px;
+}
+
+.small{
+ font-size:9px;
+ color:var(--muted);
+}
+
+.progress{
+ height:8px;
+ border-radius:10px;
+ background:#123127;
+ overflow:hidden;
+ margin-top:7px;
+}
+
+.fill{
+ height:100%;
+ width:0;
+ background:linear-gradient(90deg,#18ba7b,var(--green));
+}
+
+.pump-row{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ padding:13px;
+ border-radius:11px;
+ background:rgba(0,0,0,.16);
+ border:1px solid var(--line);
+}
+
+.pump-state{
+ font-size:21px;
+ font-weight:700;
+}
+
+.on{
+ color:var(--green);
+}
+
+.off{
+ color:var(--red);
+}
+
+.ai-list{
+ display:grid;
+ gap:7px;
+}
+
+.ai{
+ padding:10px;
+ border-radius:10px;
+ background:rgba(255,255,255,.025);
+ border-left:3px solid var(--green);
+}
+
+.ai b{
+ display:block;
+ font-size:9px;
+ margin-bottom:3px;
+}
+
+.ai span{
+ font-size:8px;
+ color:var(--muted);
+}
+
+.alert{
+ border-left-color:var(--yellow);
+}
+
+.danger{
+ border-left-color:var(--red);
+}
+
+.blue{
+ border-left-color:var(--cyan);
+}
+
+.spark{
+ height:90px;
+}
+
+.spark svg{
+ width:100%;
+ height:100%;
+}
+
+.spark-line{
+ fill:none;
+ stroke:var(--cyan);
+ stroke-width:2;
+}
+
+.spark-grid{
+ stroke:rgba(255,255,255,.05);
+}
+
+.history-table{
+ width:100%;
+ border-collapse:collapse;
+ font-size:8px;
+}
+
+.history-table th,
+.history-table td{
+ text-align:left;
+ padding:7px;
+ border-bottom:1px solid rgba(255,255,255,.06);
+}
+
+.history-table th{
+ color:var(--muted);
+ font-weight:500;
+}
+
+.history-table td{
+ color:#bfe0d5;
+}
+
+.kpi{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:7px;
+}
+
+.kpi div{
+ padding:10px;
+ background:rgba(0,0,0,.17);
+ border-radius:9px;
+}
+
+.kpi small{
+ display:block;
+ color:var(--muted);
+ font-size:7px;
+}
+
+.kpi strong{
+ font-size:12px;
+}
+
+.footer{
+ text-align:center;
+ color:#4e7269;
+ font-size:8px;
+ margin:18px 0 2px;
+}
+
+@media(max-width:1150px){
+
+ .hero{
+  grid-template-columns:1fr;
+ }
+
+ .metrics{
+  grid-template-columns:1fr 1fr;
+ }
+
+ .grid3{
+  grid-template-columns:1fr 1fr;
+ }
+
+ .scene{
+  transform:
+  translate(-50%,-50%)
+  rotateX(58deg)
+  rotateZ(-28deg)
+  scale(.66);
+ }
+}
+
+@media(max-width:760px){
+
+ .sidebar{
+  display:none;
+ }
+
+ .main{
+  width:100%;
+  margin:0;
+  padding:12px;
+ }
+
+ .metrics,
+ .grid3,
+ .grid2{
+  grid-template-columns:1fr;
+ }
+
+ .top{
+  flex-direction:column;
+  align-items:flex-start;
+ }
+
+ .farm{
+  height:360px;
+ }
+
+ .scene{
+  transform:
+  translate(-50%,-50%)
+  rotateX(58deg)
+  rotateZ(-28deg)
+  scale(.46);
+ }
+
+ .farm-topbar{
+  font-size:7px;
+ }
+
+ .hero-card h2{
+  font-size:27px;
+ }
+}
+</style>
+</head>
+
+<body>
+
+<div class="layout">
+
+<aside class="sidebar">
+
+ <div class="brand">
+  <div class="brand-icon">🌿</div>
+  <div>
+   <h2>AgriCore</h2>
+   <small>AIoT FARM OS</small>
+  </div>
+ </div>
+
+ <div class="label">FARM</div>
+
+ <a class="nav active" href="#farm">🌐 3D Digital Farm</a>
+ <a class="nav" href="#sensors">📡 Live Sensors</a>
+ <a class="nav" href="#irrigation">🚿 Irrigation</a>
+ <a class="nav" href="#ai">🧠 AI Intelligence</a>
+ <a class="nav" href="#history">📈 History</a>
+ <a class="nav" href="#alerts">🔔 Alerts</a>
+
+ <div class="label">SYSTEM</div>
+
+ <a class="nav" href="#system">⚙ System Status</a>
+ <a class="nav" href="#about">ⓘ Project Info</a>
+
+</aside>
+
+
+<main class="main">
+
+<header class="top">
+
+ <div>
+  <h1>AgriCore 3D Farm Command Center</h1>
+  <p>
+   One-page AIoT agriculture digital twin ·
+   ESP32 → Render → Flask → Dashboard
+  </p>
+ </div>
+
+ <div class="connection">
+  <span class="dot" id="dot"></span>
+  <span id="connectionText">ESP32 SYSTEM ONLINE</span>
+ </div>
+
+</header>
+
+
+<section class="hero">
+
+ <div class="card hero-card">
+
+  <div class="eyebrow">
+   NEXT-GENERATION SMART AGRICULTURE
+  </div>
+
+  <h2>
+   Walk through your farm.<br>
+   Watch every system.
+  </h2>
+
+  <p>
+   3D farm model, live sensor telemetry, automatic irrigation,
+   AI-style recommendations, alerts and session history —
+   all on one page.
+  </p>
+
+  <div class="chips">
+   <span class="chip">🌐 3D DIGITAL TWIN</span>
+   <span class="chip">⚡ LIVE DATA</span>
+   <span class="chip">🚿 AUTO PUMP</span>
+   <span class="chip">🧠 AI INSIGHTS</span>
+   <span class="chip">📈 HISTORY</span>
+  </div>
+
+ </div>
+
+
+ <div class="card status" id="system">
+
+  <div style="display:flex;justify-content:space-between">
+   <h3>System Core</h3>
+   <span class="online" id="systemStatus">● ONLINE</span>
+  </div>
+
+  <div class="sys">
+
+   <div>
+    <small>BOARD</small>
+    <strong>ESP32</strong>
+   </div>
+
+   <div>
+    <small>SIMULATION</small>
+    <strong>WOKWI</strong>
+   </div>
+
+   <div>
+    <small>BACKEND</small>
+    <strong>RENDER</strong>
+   </div>
+
+   <div>
+    <small>FRONTEND</small>
+    <strong>FLASK</strong>
+   </div>
+
+   <div>
+    <small>UPDATE</small>
+    <strong id="lastUpdate">--</strong>
+   </div>
+
+   <div>
+    <small>MODE</small>
+    <strong>AUTO</strong>
+   </div>
+
+  </div>
+
+ </div>
+
+</section>
+
+
+<div class="section" id="farm">
+ <h2>🌐 3D Digital Farm Twin</h2>
+ <span>
+  Field · Well · House · Tank · Solar · Pump · Greenhouse · Tractor · Sensors
+ </span>
+</div>
+
+
+<section class="farm">
+
+ <div class="farm-topbar">
+
+  <div class="badge">
+   FARM NETWORK · <b id="farmStatus">ONLINE</b>
+  </div>
+
+  <div class="badge">
+   PUMP · <b id="farmPump">--</b>
+  </div>
+
+ </div>
+
+
+ <div class="scene" id="scene">
+
+  <div class="ground"></div>
+
+  <div class="field f1"></div>
+  <div class="field f2"></div>
+  <div class="field f3"></div>
+  <div class="field f4"></div>
+  <div class="field f5"></div>
+  <div class="field f6"></div>
+
+  <span class="fieldname fn1">FIELD A · RICE</span>
+  <span class="fieldname fn2">FIELD B · VEGETABLES</span>
+  <span class="fieldname fn3">FIELD C · CROP ZONE</span>
+  <span class="fieldname fn4">FIELD D · NURSERY</span>
+  <span class="fieldname fn5">FIELD E · GROWTH</span>
+  <span class="fieldname fn6">FIELD F · SMART ZONE</span>
+
+  <div class="tree tr1"></div>
+  <div class="tree tr2"></div>
+  <div class="tree tr3"></div>
+  <div class="tree tr4"></div>
+  <div class="tree tr5"></div>
+  <div class="tree tr6"></div>
+
+  <div class="tree tree2"></div>
+  <div class="tree tree3"></div>
+  <div class="tree tree4"></div>
+  <div class="tree tree5"></div>
+  <div class="tree tree6"></div>
+  <div class="tree tree7"></div>
+
+  <div class="well"></div>
+  <div class="house"></div>
+  <div class="barn"></div>
+  <div class="greenhouse"></div>
+  <div class="tank"></div>
+  <div class="solar"></div>
+  <div class="tractor"></div>
+
+  <div class="pipe p1"></div>
+  <div class="pipe p2"></div>
+  <div class="pipe p3"></div>
+  <div class="pipe p4"></div>
+
+  <div class="sensor s1"></div>
+  <div class="sensor s2"></div>
+  <div class="sensor s3"></div>
+  <div class="sensor s4"></div>
+  <div class="sensor s5"></div>
+
+  <span class="tag w">WELL</span>
+  <span class="tag h">FARM HOUSE</span>
+  <span class="tag t">SMART TANK</span>
+  <span class="tag g">GREENHOUSE</span>
+
+ </div>
+
+ <div class="scan"></div>
+
+ <div class="viewbar">
+  <button type="button" id="topView">TOP</button>
+  <button type="button" id="angleView">3D ANGLE</button>
+  <button type="button" id="sideView">SIDE</button>
+ </div>
+
+</section>
+
+
+<div class="section" id="sensors">
+ <h2>📡 Live Sensor Matrix</h2>
+ <span>ESP32 data · refresh every 3 seconds</span>
+</div>
+
+
+<section class="metrics">
+
+ <div class="card metric">
+  <div class="metric-top">
+   <span class="metric-icon">🌡️</span>
+   <span class="live">● LIVE</span>
+  </div>
+
+  <div class="metric-name">TEMPERATURE</div>
+
+  <div class="metric-value">
+   <span id="temperature">--</span>
+   <span class="unit">°C</span>
+  </div>
+ </div>
+
+
+ <div class="card metric">
+
+  <div class="metric-top">
+   <span class="metric-icon">💧</span>
+   <span class="live">● LIVE</span>
+  </div>
+
+  <div class="metric-name">AIR HUMIDITY</div>
+
+  <div class="metric-value">
+   <span id="humidity">--</span>
+   <span class="unit">%</span>
+  </div>
+
+ </div>
+
+
+ <div class="card metric">
+
+  <div class="metric-top">
+   <span class="metric-icon">🌱</span>
+   <span class="live">● LIVE</span>
+  </div>
+
+  <div class="metric-name">SOIL MOISTURE RAW</div>
+
+  <div class="metric-value">
+   <span id="soil">--</span>
+   <span class="unit">/4095</span>
+  </div>
+
+ </div>
+
+
+ <div class="card metric">
+
+  <div class="metric-top">
+   <span class="metric-icon">🚰</span>
+   <span class="live">● LIVE</span>
+  </div>
+
+  <div class="metric-name">WATER DISTANCE</div>
+
+  <div class="metric-value">
+   <span id="waterDistance">--</span>
+   <span class="unit">CM</span>
+  </div>
+
+ </div>
+
+</section>
+
+
+<section class="grid3" style="margin-top:9px">
+
+ <div class="card box">
+
+  <h3>🌱 Soil Health</h3>
+
+  <div class="small">
+   Moisture level
+  </div>
+
+  <div class="progress">
+   <div class="fill" id="soilFill"></div>
+  </div>
+
+  <div style="margin-top:7px;font-size:10px">
+   <b id="soilPercent">--</b>
+   ·
+   <span id="soilStatus">--</span>
+  </div>
+
+ </div>
+
+
+ <div class="card box">
+
+  <h3>🌡️ Climate</h3>
+
+  <div class="kpi">
+
+   <div>
+    <small>TEMP</small>
+    <strong id="climateTemp">--</strong>
+   </div>
+
+   <div>
+    <small>HUMIDITY</small>
+    <strong id="climateHum">--</strong>
+   </div>
+
+   <div>
+    <small>STATUS</small>
+    <strong id="climateStatus">--</strong>
+   </div>
+
+  </div>
+
+ </div>
+
+
+ <div class="card box">
+
+  <h3>🚰 Water Source</h3>
+
+  <div class="kpi">
+
+   <div>
+    <small>DISTANCE</small>
+    <strong id="waterKpi">--</strong>
+   </div>
+
+   <div>
+    <small>PUMP</small>
+    <strong id="pumpKpi">--</strong>
+   </div>
+
+   <div>
+    <small>MODE</small>
+    <strong>AUTO</strong>
+   </div>
+
+  </div>
+
+ </div>
+
+</section>
+
+
+<div class="section" id="irrigation">
+
+ <h2>🚿 Automatic Irrigation Center</h2>
+
+ <span>
+  ESP32 automatic pump logic
+ </span>
+
+</div>
+
+
+<section class="grid2">
+
+ <div class="card box">
+
+  <h3>💦 Pump Controller</h3>
+
+  <div class="pump-row">
+
+   <div>
+
+    <div class="small">
+     CURRENT PUMP STATE
+    </div>
+
+    <div id="pump" class="pump-state off">
+     --
+    </div>
+
+   </div>
+
+   <div style="font-size:32px">
+    🚿
+   </div>
+
+  </div>
+
+  <div class="info" style="margin-top:9px">
+   <small>AUTOMATION</small>
+   <strong>Automatic soil-based control</strong>
+  </div>
+
+  <div class="info">
+   <small>SOIL THRESHOLD</small>
+   <strong>ESP32 threshold: 2000 RAW</strong>
+  </div>
+
+ </div>
+
+
+ <div class="card box">
+
+  <h3>🔄 Irrigation Decision</h3>
+
+  <div class="ai-list">
+
+   <div class="ai" id="pumpDecision">
+    <b>Monitoring soil...</b>
+    <span>Waiting for live ESP32 value.</span>
+   </div>
+
+   <div class="ai blue">
+    <b>Water distance</b>
+    <span id="waterDecision">
+     Waiting for sensor reading.
+    </span>
+   </div>
+
+  </div>
+
+ </div>
+
+</section>
+
+
+<div class="section" id="ai">
+
+ <h2>🧠 AI Farm Intelligence</h2>
+
+ <span>
+  Live rule-based recommendations from current telemetry
+ </span>
+
+</div>
+
+
+<section class="grid3">
+
+ <div class="card box">
+
+  <h3>🌱 Crop Advisor</h3>
+
+  <div class="ai-list">
+
+   <div class="ai">
+    <b id="cropTitle">Crop condition</b>
+    <span id="cropAdvice">
+     Waiting for soil data.
+    </span>
+   </div>
+
+   <div class="ai">
+    <b>Growth Zone</b>
+    <span>
+     Fields A–F monitored as separate digital farm zones.
+    </span>
+   </div>
+
+  </div>
+
+ </div>
+
+
+ <div class="card box">
+
+  <h3>🌦️ Climate Advisor</h3>
+
+  <div class="ai-list">
+
+   <div class="ai">
+    <b id="climateTitle">Climate condition</b>
+    <span id="climateAdvice">
+     Waiting for temperature and humidity.
+    </span>
+   </div>
+
+   <div class="ai">
+    <b>Environment</b>
+    <span>
+     ESP32 DHT sensor telemetry is used for this dashboard.
+    </span>
+   </div>
+
+  </div>
+
+ </div>
+
+
+ <div class="card box">
+
+  <h3>💧 Water Advisor</h3>
+
+  <div class="ai-list">
+
+   <div class="ai">
+    <b id="waterTitle">Water system</b>
+    <span id="waterAdvice">
+     Waiting for distance reading.
+    </span>
+   </div>
+
+   <div class="ai">
+    <b>Smart irrigation</b>
+    <span>
+     Pump status is read directly from the ESP32 payload.
+    </span>
+   </div>
+
+  </div>
+
+ </div>
+
+</section>
+
+
+<div class="section">
+
+ <h2>📈 Live Telemetry Graphs</h2>
+
+ <span>
+  Lightweight SVG · low laptop load
+ </span>
+
+</div>
+
+
+<section class="grid2">
+
+ <div class="card box">
+
+  <h3>
+   Temperature
+   <span style="float:right;color:var(--green)" id="tempGraphValue">
+    --
+   </span>
+  </h3>
+
+  <div class="spark">
+
+   <svg viewBox="0 0 500 90" preserveAspectRatio="none">
+
+    <path
+     class="spark-grid"
+     d="M0 22H500M0 45H500M0 68H500"
+    />
+
+    <path
+     id="tempPath"
+     class="spark-line"
+     d="M0 70L500 70"
+    />
+
+   </svg>
+
+  </div>
+
+ </div>
+
+
+ <div class="card box">
+
+  <h3>
+   Humidity
+   <span style="float:right;color:var(--green)" id="humGraphValue">
+    --
+   </span>
+  </h3>
+
+  <div class="spark">
+
+   <svg viewBox="0 0 500 90" preserveAspectRatio="none">
+
+    <path
+     class="spark-grid"
+     d="M0 22H500M0 45H500M0 68H500"
+    />
+
+    <path
+     id="humPath"
+     class="spark-line"
+     d="M0 70L500 70"
+    />
+
+   </svg>
+
+  </div>
+
+ </div>
+
+
+ <div class="card box">
+
+  <h3>
+   Soil Moisture
+   <span style="float:right;color:var(--green)" id="soilGraphValue">
+    --
+   </span>
+  </h3>
+
+  <div class="spark">
+
+   <svg viewBox="0 0 500 90" preserveAspectRatio="none">
+
+    <path
+     class="spark-grid"
+     d="M0 22H500M0 45H500M0 68H500"
+    />
+
+    <path
+     id="soilPath"
+     class="spark-line"
+     d="M0 70L500 70"
+    />
+
+   </svg>
+
+  </div>
+
+ </div>
+
+
+ <div class="card box">
+
+  <h3>
+   Water Distance
+   <span style="float:right;color:var(--green)" id="waterGraphValue">
+    --
+   </span>
+  </h3>
+
+  <div class="spark">
+
+   <svg viewBox="0 0 500 90" preserveAspectRatio="none">
+
+    <path
+     class="spark-grid"
+     d="M0 22H500M0 45H500M0 68H500"
+    />
+
+    <path
+     id="waterPath"
+     class="spark-line"
+     d="M0 70L500 70"
+    />
+
+   </svg>
+
+  </div>
+
+ </div>
+
+</section>
+
+
+<div class="section" id="history">
+
+ <h2>🕘 Live Session History</h2>
+
+ <span>
+  Latest readings collected while this page is open
+ </span>
+
+</div>
+
+
+<section class="card box">
+
+ <table class="history-table">
+
+  <thead>
+   <tr>
+    <th>TIME</th>
+    <th>TEMP</th>
+    <th>HUMIDITY</th>
+    <th>SOIL</th>
+    <th>WATER</th>
+    <th>PUMP</th>
+   </tr>
+  </thead>
+
+  <tbody id="historyBody">
+
+   <tr>
+    <td colspan="6">
+     Waiting for live readings...
+    </td>
+   </tr>
+
+  </tbody>
+
+ </table>
+
+</section>
+
+
+<div class="section" id="alerts">
+
+ <h2>🔔 Smart Alerts</h2>
+
+ <span>
+  Automatically generated from current values
+ </span>
+
+</div>
+
+
+<section class="grid3">
+
+ <div class="card box alert green" id="alertSoil">
+
+  <h3>🌱 Soil Alert</h3>
+
+  <div id="soilAlert">
+   Monitoring...
+  </div>
+
+ </div>
+
+
+ <div class="card box alert" id="alertWater">
+
+  <h3>🚰 Water Alert</h3>
+
+  <div id="waterAlert">
+   Monitoring...
+  </div>
+
+ </div>
+
+
+ <div class="card box blue" id="alertSystem">
+
+  <h3>📡 System Alert</h3>
+
+  <div id="systemAlert">
+   Monitoring connection...
+  </div>
+
+ </div>
+
+</section>
+
+
+<div class="section" id="about">
+
+ <h2>📋 Project Architecture</h2>
+
+ <span>
+  Current working architecture preserved
+ </span>
+
+</div>
+
+
+<section class="card box">
+
+ <div class="kpi">
+
+  <div>
+   <small>SIMULATION</small>
+   <strong>WOKWI ESP32</strong>
+  </div>
+
+  <div>
+   <small>BACKEND</small>
+   <strong>RENDER FLASK</strong>
+  </div>
+
+  <div>
+   <small>DASHBOARD</small>
+   <strong>LOCAL FLASK</strong>
+  </div>
+
+ </div>
+
+ <p
+  class="small"
+  style="margin:11px 0 0;line-height:1.6"
+ >
+  Data flow:
+  Wokwi ESP32 → HTTPS POST /sensor →
+  Render backend → /data →
+  local Flask dashboard.
+  This dashboard does not alter the existing
+  ESP32 or backend connection.
+ </p>
+
+</section>
+
+
+<div class="footer">
+ AgriCore AIoT 3D Digital Farm · Smart Agriculture Command Center
+</div>
+
+</main>
+</div>
+
+
+<script>
+
+const MAX_HISTORY=24;
+
+const historyData=[];
+
+const series={
+ temperature:[],
+ humidity:[],
+ soil:[],
+ water:[]
+};
+
+const scene=document.getElementById("scene");
+
+
+function setView(v){
+
+ if(v==="top"){
+  scene.style.transform=
+  "translate(-50%,-50%) rotateX(70deg) rotateZ(-28deg) scale(.78)";
+ }
+
+ if(v==="angle"){
+  scene.style.transform=
+  "translate(-50%,-50%) rotateX(58deg) rotateZ(-28deg) scale(.78)";
+ }
+
+ if(v==="side"){
+  scene.style.transform=
+  "translate(-50%,-50%) rotateX(43deg) rotateZ(-8deg) scale(.78)";
+ }
+
+}
+
+
+document.getElementById("topView").onclick=
+()=>setView("top");
+
+document.getElementById("angleView").onclick=
+()=>setView("angle");
+
+document.getElementById("sideView").onclick=
+()=>setView("side");
+
+
+function makePath(values,min,max){
+
+ if(!values.length)
+  return "M0 70L500 70";
+
+ const range=(max-min)||1;
+
+ return values.map((v,i)=>{
+
+  const x=
+   values.length===1
+   ?0
+   :(i/(values.length-1))*500;
+
+  const y=
+   78-
+   ((Math.max(min,Math.min(max,v))-min)/range)*66;
+
+  return (i?"L":"M")+
+   x.toFixed(1)+" "+
+   y.toFixed(1);
+
+ }).join(" ");
+
+}
+
+
+function draw(id,values,min,max){
+
+ const element=document.getElementById(id);
+
+ if(element){
+  element.setAttribute(
+   "d",
+   makePath(values,min,max)
+  );
+ }
+
+}
+
+
+function addHistory(
+ data,
+ temp,
+ hum,
+ soil,
+ water,
+ pump
+){
+
+ const t=
+  data.time ||
+  new Date().toLocaleTimeString();
+
+ historyData.unshift({
+  t,
+  temp,
+  hum,
+  soil,
+  water,
+  pump
+ });
+
+ if(historyData.length>8)
+  historyData.pop();
+
+ document.getElementById("historyBody").innerHTML=
+ historyData.map(r=>
+
+  `<tr>
+   <td>${r.t}</td>
+   <td>${r.temp.toFixed(1)}°C</td>
+   <td>${r.hum.toFixed(1)}%</td>
+   <td>${Math.round(r.soil)}</td>
+   <td>${r.water<0?"--":r.water.toFixed(1)+" cm"}</td>
+   <td>${r.pump?"ON":"OFF"}</td>
+  </tr>`
+
+ ).join("");
+
+}
+
+
+function setAlert(el,text,type){
+
+ if(!el)return;
+
+ el.className=
+  "card box "+
+  (
+   type==="red"
+   ?"alert danger"
+   :
+   type==="yellow"
+   ?"alert"
+   :
+   "blue"
+  );
+
+ const content=el.querySelector("div");
+
+ if(content)
+  content.textContent=text;
+
+}
+
+
+async function updateDashboard(){
+
+ try{
+
+  /*
+   * IMPORTANT:
+   * This fetch URL is unchanged.
+   * Local Flask still provides /data.
+   * Local Flask still gets data from Render.
+   */
+
+  const res=
+   await fetch(
+    "/data?time="+Date.now(),
+    {
+     cache:"no-store"
+    }
+   );
+
+  if(!res.ok)
+   throw new Error("data endpoint error");
+
+  const d=
+   await res.json();
+
+
+  const temp=
+   Number(d.temperature??0);
+
+  const hum=
+   Number(d.humidity??0);
+
+  const soil=
+   Number(
+    d.soil??
+    d.soil_moisture??
+    0
+   );
+
+  const water=
+   Number(
+    d.water_distance??-1
+   );
+
+  const pump=
+   d.pump_status===true ||
+   d.pump_status===1 ||
+   String(
+    d.pump_status
+   ).toLowerCase()==="true";
+
+
+  /* LIVE SENSOR VALUES */
+
+  document.getElementById(
+   "temperature"
+  ).textContent=
+   temp.toFixed(1);
+
+  document.getElementById(
+   "humidity"
+  ).textContent=
+   hum.toFixed(1);
+
+  document.getElementById(
+   "soil"
+  ).textContent=
+   Math.round(soil);
+
+  document.getElementById(
+   "waterDistance"
+  ).textContent=
+   water<0
+   ?"--"
+   :water.toFixed(1);
+
+
+  /* CLIMATE */
+
+  document.getElementById(
+   "climateTemp"
+  ).textContent=
+   temp.toFixed(1)+"°C";
+
+  document.getElementById(
+   "climateHum"
+  ).textContent=
+   hum.toFixed(1)+"%";
+
+  document.getElementById(
+   "climateStatus"
+  ).textContent=
+   (
+    temp>=20 &&
+    temp<=35
+   )
+   ?"NORMAL"
+   :"CHECK";
+
+
+  /* WATER / PUMP KPI */
+
+  document.getElementById(
+   "waterKpi"
+  ).textContent=
+   water<0
+   ?"--"
+   :water.toFixed(1)+" cm";
+
+  document.getElementById(
+   "pumpKpi"
+  ).textContent=
+   pump
+   ?"ON"
+   :"OFF";
+
+
+  /* SOIL */
+
+  const pct=
+   Math.round(
+    Math.max(
+     0,
+     Math.min(
+      100,
+      soil/4095*100
+     )
+    )
+   );
+
+  document.getElementById(
+   "soilFill"
+  ).style.width=
+   pct+"%";
+
+  document.getElementById(
+   "soilPercent"
+  ).textContent=
+   pct+"%";
+
+  document.getElementById(
+   "soilStatus"
+  ).textContent=
+   d.soil_status ||
+   "--";
+
+
+  /* PUMP STATE */
+
+  const pe=
+   document.getElementById("pump");
+
+  pe.textContent=
+   pump
+   ?"ON"
+   :"OFF";
+
+  pe.className=
+   "pump-state "+
+   (
+    pump
+    ?"on"
+    :"off"
+   );
+
+  document.getElementById(
+   "farmPump"
+  ).textContent=
+   pump
+   ?"ON"
+   :"OFF";
+
+
+  /* GRAPH DATA */
+
+  series.temperature.push(temp);
+  series.humidity.push(hum);
+  series.soil.push(soil);
+
+  if(water>=0)
+   series.water.push(water);
+
+  for(const k in series){
+
+   if(series[k].length>MAX_HISTORY)
+    series[k].shift();
+
+  }
+
+
+  draw(
+   "tempPath",
+   series.temperature,
+   15,
+   45
+  );
+
+  draw(
+   "humPath",
+   series.humidity,
+   0,
+   100
+  );
+
+  draw(
+   "soilPath",
+   series.soil,
+   0,
+   4095
+  );
+
+  draw(
+   "waterPath",
+   series.water,
+   0,
+   500
+  );
+
+
+  document.getElementById(
+   "tempGraphValue"
+  ).textContent=
+   temp.toFixed(1)+"°C";
+
+  document.getElementById(
+   "humGraphValue"
+  ).textContent=
+   hum.toFixed(1)+"%";
+
+  document.getElementById(
+   "soilGraphValue"
+  ).textContent=
+   Math.round(soil);
+
+  document.getElementById(
+   "waterGraphValue"
+  ).textContent=
+   water<0
+   ?"--"
+   :water.toFixed(1)+" cm";
+
+
+  /* HISTORY */
+
+  addHistory(
+   d,
+   temp,
+   hum,
+   soil,
+   water,
+   pump
+  );
+
+
+  /* SYSTEM */
+
+  document.getElementById(
+   "lastUpdate"
+  ).textContent=
+   new Date().toLocaleTimeString();
+
+  /*
+   * FIX:
+   * The old code had:
+   *
+   * document.getElementById("time")?.textContent=...
+   *
+   * That is invalid JavaScript.
+   *
+   * There is no #time element anyway,
+   * so it is intentionally removed.
+   */
+
+  document.getElementById(
+   "connectionText"
+  ).textContent=
+   "ESP32 SYSTEM ONLINE";
+
+  document.getElementById(
+   "systemStatus"
+  ).textContent=
+   "● ONLINE";
+
+  document.getElementById(
+   "farmStatus"
+  ).textContent=
+   "ONLINE";
+
+
+  /* PUMP DECISION */
+
+  const pd=
+   document.getElementById(
+    "pumpDecision"
+   );
+
+  if(soil<2000){
+
+   pd.querySelector("b").textContent=
+    "Pump decision: ON";
+
+   pd.querySelector("span").textContent=
+    "Soil is below the ESP32 automatic threshold.";
+
+  }else{
+
+   pd.querySelector("b").textContent=
+    "Pump decision: OFF";
+
+   pd.querySelector("span").textContent=
+    "Soil is at or above the ESP32 automatic threshold.";
+
+  }
+
+
+  document.getElementById(
+   "waterDecision"
+  ).textContent=
+   water<0
+   ?"No valid water distance reading."
+   :
+   (
+    "Current distance: "+
+    water.toFixed(1)+
+    " cm"
+   );
+
+
+  /* CROP AI */
+
+  const cropAdvice=
+   document.getElementById(
+    "cropAdvice"
+   );
+
+  if(soil<1200){
+
+   document.getElementById(
+    "cropTitle"
+   ).textContent=
+    "Dry soil detected";
+
+   cropAdvice.textContent=
+    "Irrigation demand is high; monitor the automatic pump.";
+
+  }
+  else if(soil>=2800){
+
+   document.getElementById(
+    "cropTitle"
+   ).textContent=
+    "High soil reading";
+
+   cropAdvice.textContent=
+    "Avoid additional irrigation until the reading decreases.";
+
+  }
+  else{
+
+   document.getElementById(
+    "cropTitle"
+   ).textContent=
+    "Normal soil range";
+
+   cropAdvice.textContent=
+    "Current soil reading is within the dashboard normal range.";
+
+  }
+
+
+  /* CLIMATE AI */
+
+  document.getElementById(
+   "climateTitle"
+  ).textContent=
+   temp>35
+   ?"High temperature"
+   :"Climate condition";
+
+  document.getElementById(
+   "climateAdvice"
+  ).textContent=
+   temp>35
+   ?"Heat stress monitoring recommended."
+   :"Temperature and humidity are being monitored continuously.";
+
+
+  /* WATER AI */
+
+  document.getElementById(
+   "waterTitle"
+  ).textContent=
+   water<0
+   ?"Water reading unavailable"
+   :"Water sensor active";
+
+  document.getElementById(
+   "waterAdvice"
+  ).textContent=
+   water<0
+   ?"Check the distance sensor connection."
+   :"Water-distance telemetry is arriving from ESP32.";
+
+
+  /* ALERTS */
+
+  setAlert(
+   document.getElementById(
+    "alertSoil"
+   ),
+   soil<1200
+   ?"Dry soil · automatic irrigation demand"
+   :
+   "Soil condition: "+
+   (
+    d.soil_status ||
+    "NORMAL"
+   ),
+   soil<1200
+   ?"red"
+   :"green"
+  );
+
+
+  setAlert(
+   document.getElementById(
+    "alertWater"
+   ),
+   water<0
+   ?"Water distance unavailable"
+   :
+   "Water distance: "+
+   water.toFixed(1)+
+   " cm",
+   water<0
+   ?"yellow"
+   :"green"
+  );
+
+
+  setAlert(
+   document.getElementById(
+    "alertSystem"
+   ),
+   "ESP32 → Render → Flask data path online",
+   "green"
+  );
+
+
+ }catch(e){
+
+  console.error(e);
+
+  document.getElementById(
+   "connectionText"
+  ).textContent=
+   "SERVER DISCONNECTED";
+
+  document.getElementById(
+   "systemStatus"
+  ).textContent=
+   "● OFFLINE";
+
+  document.getElementById(
+   "farmStatus"
+  ).textContent=
+   "OFFLINE";
+
+  setAlert(
+   document.getElementById(
+    "alertSystem"
+   ),
+   "Waiting for Flask / ESP32 data",
+   "red"
+  );
+
+ }
+
+}
+
+
+/*
+ * FIRST LOAD
+ */
+updateDashboard();
+
+
+/*
+ * LIVE UPDATE EVERY 3 SECONDS
+ */
+setInterval(
+ updateDashboard,
+ 3000
+);
+
+</script>
+
+</body>
 </html>
