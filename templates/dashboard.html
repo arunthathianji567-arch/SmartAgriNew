@@ -6,7 +6,7 @@
 
 <title>AgriSense | Smart Agriculture AIoT</title>
 
-
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
 
@@ -704,7 +704,7 @@ body{
 
 .metrics{
     display:grid;
-    grid-template-columns:repeat(2,minmax(0,1fr));
+    grid-template-columns:repeat(5,1fr);
     gap:12px;
 }
 
@@ -1232,18 +1232,32 @@ body{
 }
 
 
-.live-graph{position:relative;width:100%;min-height:190px;height:100%;overflow:hidden;border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,.018),rgba(255,255,255,.006))}.live-graph svg{display:block;width:100%;height:100%}.live-graph .graph-grid{stroke:rgba(255,255,255,.065);stroke-width:1}.live-graph .graph-axis{stroke:rgba(255,255,255,.11);stroke-width:1}.live-graph .graph-line{fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}.live-graph .graph-dot{stroke:#08100d;stroke-width:2}.live-graph .graph-label{fill:#64716c;font-size:11px;font-family:Segoe UI,Arial,sans-serif}.live-graph .graph-value{fill:#eef7f2;font-size:12px;font-weight:600;font-family:Segoe UI,Arial,sans-serif}.live-graph .graph-empty{fill:#64716c;font-size:12px;font-family:Segoe UI,Arial,sans-serif}@media(max-width:900px){.metrics{grid-template-columns:1fr}}
+/* =========================================================
+   AGRISENSE FEATURE CENTER
+========================================================= */
+.feature-center{margin-top:16px;display:grid;grid-template-columns:1.25fr 1fr;gap:16px}
+.feature-card{background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:18px}
+.feature-card h3{font-size:13px}.feature-card>p{color:var(--muted);font-size:9px;margin-top:4px}
+.feature-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px}
+.feature-badge{font-size:9px;padding:6px 9px;border-radius:8px;border:1px solid rgba(126,231,135,.18);color:#bce8c7;background:#0e1914}
+.alert-center-list{display:grid;gap:8px}
+.live-alert{display:flex;align-items:center;gap:10px;padding:10px;border:1px solid rgba(255,255,255,.06);background:#0b1210;border-radius:9px}
+.live-alert-icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:#18211e;flex:none}
+.live-alert strong{display:block;font-size:10px}.live-alert span{display:block;color:var(--muted);font-size:9px;margin-top:2px}
+.live-alert.ok .live-alert-icon{color:var(--green)}.live-alert.warn .live-alert-icon{color:var(--yellow)}.live-alert.danger .live-alert-icon{color:var(--red)}
+.health-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.health-item{padding:11px;border:1px solid rgba(255,255,255,.06);background:#0b1210;border-radius:9px}
+.health-top{display:flex;justify-content:space-between;gap:8px;font-size:10px}.health-top span{color:var(--muted)}
+.health-bar{height:5px;background:#202a26;border-radius:10px;overflow:hidden;margin-top:8px}.health-bar i{display:block;height:100%;width:100%;background:var(--green);border-radius:10px}
+.analytics-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+.analytics-mini{padding:10px;border:1px solid rgba(255,255,255,.06);border-radius:9px;background:#0b1210}.analytics-mini small{display:block;color:var(--muted);font-size:8px}.analytics-mini strong{display:block;font-size:14px;margin-top:4px}
+.feature-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}.feature-action{border:1px solid var(--border);background:#101715;color:#d7e5df;border-radius:9px;padding:9px 11px;font-size:10px;cursor:pointer}.feature-action:hover{border-color:rgba(126,231,135,.25);background:#15221c}
+.settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.setting-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px;background:#0b1210;border:1px solid rgba(255,255,255,.06);border-radius:9px;font-size:10px}.setting-row span{color:var(--muted)}
+.switch{position:relative;width:34px;height:19px;flex:none}.switch input{opacity:0;width:0;height:0}.slider{position:absolute;inset:0;background:#29332f;border-radius:20px;cursor:pointer}.slider:before{content:"";position:absolute;width:13px;height:13px;left:3px;top:3px;background:#9aa6a1;border-radius:50%;transition:.18s}.switch input:checked+.slider{background:#245f3c}.switch input:checked+.slider:before{transform:translateX(15px);background:var(--green)}
+.mode-note{margin-top:10px;color:#8e9d97;font-size:9px;line-height:1.5;padding:9px;border-left:2px solid var(--yellow);background:#121610;border-radius:6px}
+@media(max-width:1050px){.feature-center{grid-template-columns:1fr}.analytics-strip{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:650px){.health-grid,.settings-grid{grid-template-columns:1fr}.analytics-strip{grid-template-columns:1fr 1fr}}
 
-.live-graph{position:relative;width:100%;height:100%;min-height:190px;overflow:hidden;border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,.018),rgba(255,255,255,.006));}
-.live-graph svg{display:block;width:100%;height:100%;}
-.live-graph .graph-grid{stroke:rgba(255,255,255,.065);stroke-width:1;}
-.live-graph .graph-axis{stroke:rgba(255,255,255,.11);stroke-width:1;}
-.live-graph .graph-line{fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;}
-.live-graph .graph-dot{stroke:#08100d;stroke-width:2;}
-.live-graph .graph-label{fill:#64716c;font-size:11px;font-family:Segoe UI,Arial,sans-serif;}
-.live-graph .graph-value{fill:#eef7f2;font-size:12px;font-weight:600;font-family:Segoe UI,Arial,sans-serif;}
-.live-graph .graph-empty{fill:#64716c;font-size:12px;font-family:Segoe UI,Arial,sans-serif;}
-@media(max-width:900px){.metrics{grid-template-columns:1fr;}}
 </style>
 </head>
 
@@ -1554,7 +1568,7 @@ body{
 <div class="section-head">
 
     <div>
-        <h2>ESP32 Live Sensor Values</h2>
+        <h2>Live Farm Intelligence</h2>
         <p>Real-time values received from ESP32 through Flask</p>
     </div>
 
@@ -1710,7 +1724,7 @@ body{
         </div>
 
         <div class="chart-box chart-small">
-            <div class="live-graph" id="temperatureChart" role="img" aria-label="Live temperature graph"></div>
+            <canvas id="temperatureChart"></canvas>
         </div>
 
     </div>
@@ -1732,7 +1746,7 @@ body{
         </div>
 
         <div class="chart-box chart-small">
-            <div class="live-graph" id="humidityChart" role="img" aria-label="Live humidity graph"></div>
+            <canvas id="humidityChart"></canvas>
         </div>
 
     </div>
@@ -1754,7 +1768,7 @@ body{
         </div>
 
         <div class="chart-box chart-small">
-            <div class="live-graph" id="soilChart" role="img" aria-label="Live soil moisture graph"></div>
+            <canvas id="soilChart"></canvas>
         </div>
 
     </div>
@@ -1776,7 +1790,7 @@ body{
         </div>
 
         <div class="chart-box chart-small">
-            <div class="live-graph" id="waterChart" role="img" aria-label="Live water distance graph"></div>
+            <canvas id="waterChart"></canvas>
         </div>
 
     </div>
@@ -1798,7 +1812,7 @@ body{
         </div>
 
         <div class="chart-box">
-            <div class="live-graph" id="overviewChart" role="img" aria-label="Live farm environment graph"></div>
+            <canvas id="overviewChart"></canvas>
         </div>
 
     </div>
@@ -2084,6 +2098,46 @@ body{
 </div>
 
 
+<!-- FEATURE CENTER -->
+<section class="feature-center" id="featureCenter">
+  <div class="feature-card" id="reportsFeature">
+    <div class="feature-head"><div><h3>Live Alert & Analytics Center</h3><p>Automatic analysis from the real ESP32 sensor values.</p></div><span class="feature-badge" id="alertCountBadge">0 alerts</span></div>
+    <div class="alert-center-list" id="liveAlerts"></div>
+    <div class="analytics-strip">
+      <div class="analytics-mini"><small>Temperature</small><strong id="avgTemp">--</strong></div>
+      <div class="analytics-mini"><small>Humidity</small><strong id="avgHumidity">--</strong></div>
+      <div class="analytics-mini"><small>Soil</small><strong id="avgSoil">--</strong></div>
+      <div class="analytics-mini"><small>Water</small><strong id="avgWater">--</strong></div>
+    </div>
+    <div class="feature-actions"><button class="feature-action" id="downloadReportBtn" type="button">⬇ Download CSV Report</button><button class="feature-action" id="printReportBtn" type="button">🖨 Print Report</button><button class="feature-action" id="refreshNowBtn" type="button">↻ Refresh Now</button></div>
+  </div>
+  <div class="feature-card">
+    <div class="feature-head"><div><h3>Sensor & System Health</h3><p>Live connection and reading quality.</p></div><span class="feature-badge" id="systemHealthBadge">CHECKING</span></div>
+    <div class="health-grid">
+      <div class="health-item"><div class="health-top"><span>ESP32 Data</span><b id="healthEsp">--</b></div><div class="health-bar"><i id="barEsp"></i></div></div>
+      <div class="health-item"><div class="health-top"><span>Temperature</span><b id="healthTemp">--</b></div><div class="health-bar"><i id="barTemp"></i></div></div>
+      <div class="health-item"><div class="health-top"><span>Humidity</span><b id="healthHum">--</b></div><div class="health-bar"><i id="barHum"></i></div></div>
+      <div class="health-item"><div class="health-top"><span>Soil Sensor</span><b id="healthSoil">--</b></div><div class="health-bar"><i id="barSoil"></i></div></div>
+      <div class="health-item"><div class="health-top"><span>Water Sensor</span><b id="healthWater">--</b></div><div class="health-bar"><i id="barWater"></i></div></div>
+      <div class="health-item"><div class="health-top"><span>Pump State</span><b id="healthPump">--</b></div><div class="health-bar"><i id="barPump"></i></div></div>
+    </div>
+  </div>
+  <div class="feature-card">
+    <div class="feature-head"><div><h3>Dynamic AI Farm Advisor</h3><p>Rule-based recommendations using current live readings.</p></div><span class="feature-badge">LIVE</span></div>
+    <div class="alert-center-list" id="dynamicRecommendations"></div>
+  </div>
+  <div class="feature-card">
+    <div class="feature-head"><div><h3>Dashboard Settings</h3><p>These controls affect only this dashboard UI.</p></div><span class="feature-badge">LOCAL</span></div>
+    <div class="settings-grid">
+      <label class="setting-row"><span>Live refresh</span><span class="switch"><input id="liveRefreshToggle" type="checkbox" checked><i class="slider"></i></span></label>
+      <label class="setting-row"><span>Live notifications</span><span class="switch"><input id="notificationToggle" type="checkbox" checked><i class="slider"></i></span></label>
+      <label class="setting-row"><span>Compact dashboard</span><span class="switch"><input id="compactToggle" type="checkbox"><i class="slider"></i></span></label>
+      <label class="setting-row"><span>Auto-scroll alerts</span><span class="switch"><input id="alertScrollToggle" type="checkbox" checked><i class="slider"></i></span></label>
+    </div>
+    <div class="mode-note">Pump AUTO logic remains controlled by the existing ESP32 firmware. No dashboard-only switch will pretend to send a hardware command.</div>
+  </div>
+</section>
+
 <div class="toast" id="toast">
     Action completed
 </div>
@@ -2108,20 +2162,274 @@ const waterData = [];
 
 
 /* =========================================================
-   LIGHTWEIGHT LIVE SVG GRAPHS
+   CHART DEFAULTS
 ========================================================= */
-function graphNumber(value){const n=Number(value);return Number.isFinite(n)?n:0;}
-function graphY(value,minValue,maxValue,height,pad){const range=Math.max(1,maxValue-minValue);return pad.top+(1-((graphNumber(value)-minValue)/range))*(height-pad.top-pad.bottom);}
-function makeGraphPath(values,minValue,maxValue,width,height,pad){if(values.length<2)return "";const innerWidth=width-pad.left-pad.right;return values.map((value,index)=>{const x=pad.left+(index/Math.max(1,values.length-1))*innerWidth;const y=graphY(value,minValue,maxValue,height,pad);return (index===0?"M ":"L ")+x.toFixed(2)+" "+y.toFixed(2);}).join(" ");}
-function renderSingleGraph(id,values,timeLabels,stroke,unit,zeroFloor){const box=document.getElementById(id);if(!box)return;const width=800,height=250,pad={left:48,right:20,top:22,bottom:34},nums=values.map(graphNumber);if(!nums.length){box.innerHTML='<svg viewBox="0 0 800 250"><text class="graph-empty" x="400" y="130" text-anchor="middle">Waiting for live ESP32 data...</text></svg>';return;}let minValue=Math.min(...nums),maxValue=Math.max(...nums);if(zeroFloor)minValue=Math.min(0,minValue);if(minValue===maxValue){const extra=Math.max(1,Math.abs(minValue)*.08);minValue-=extra;maxValue+=extra;}else{const extra=(maxValue-minValue)*.1;minValue-=extra;maxValue+=extra;if(zeroFloor)minValue=Math.min(0,minValue);}const innerWidth=width-pad.left-pad.right,innerHeight=height-pad.top-pad.bottom;let svg=`<svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none">`;for(let i=0;i<=4;i++){const y=pad.top+(i/4)*innerHeight,value=maxValue-(i/4)*(maxValue-minValue);svg+=`<line class="graph-grid" x1="${pad.left}" y1="${y}" x2="${width-pad.right}" y2="${y}"/><text class="graph-label" x="${pad.left-8}" y="${y+4}" text-anchor="end">${value.toFixed(unit==="cm"?0:1)}</text>`;}svg+=`<path class="graph-line" d="${makeGraphPath(nums,minValue,maxValue,width,height,pad)}" stroke="${stroke}"></path>`;const i=nums.length-1,x=pad.left+(i/Math.max(1,nums.length-1))*innerWidth,y=graphY(nums[i],minValue,maxValue,height,pad);svg+=`<circle class="graph-dot" cx="${x}" cy="${y}" r="4" fill="${stroke}"></circle><text class="graph-value" x="${width-pad.right}" y="16" text-anchor="end">${nums[i].toFixed(1)} ${unit}</text>`;if(timeLabels.length){svg+=`<text class="graph-label" x="${pad.left}" y="${height-10}">${timeLabels[0]||""}</text><text class="graph-label" x="${width-pad.right}" y="${height-10}" text-anchor="end">${timeLabels[timeLabels.length-1]||""}</text>`;}box.innerHTML=svg+'</svg>';}
-function renderOverviewGraph(){const box=document.getElementById('overviewChart');if(!box)return;const width=800,height=250,pad={left:48,right:20,top:24,bottom:34},temp=temperatureData.map(graphNumber),humidity=humidityData.map(graphNumber),count=Math.max(temp.length,humidity.length);if(!count){box.innerHTML='<svg viewBox="0 0 800 250"><text class="graph-empty" x="400" y="130" text-anchor="middle">Waiting for live ESP32 data...</text></svg>';return;}const all=temp.concat(humidity);let minValue=Math.min(...all),maxValue=Math.max(...all);if(minValue===maxValue){minValue-=5;maxValue+=5;}else{const extra=(maxValue-minValue)*.1;minValue-=extra;maxValue+=extra;}const innerWidth=width-pad.left-pad.right,innerHeight=height-pad.top-pad.bottom;function path(values){if(values.length<2)return '';return values.map((value,index)=>{const x=pad.left+(index/Math.max(1,count-1))*innerWidth,y=graphY(value,minValue,maxValue,height,pad);return (index===0?'M ':'L ')+x.toFixed(2)+' '+y.toFixed(2);}).join(' ');}let svg=`<svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none">`;for(let i=0;i<=4;i++){const y=pad.top+(i/4)*innerHeight,value=maxValue-(i/4)*(maxValue-minValue);svg+=`<line class="graph-grid" x1="${pad.left}" y1="${y}" x2="${width-pad.right}" y2="${y}"/><text class="graph-label" x="${pad.left-8}" y="${y+4}" text-anchor="end">${value.toFixed(0)}</text>`;}svg+=`<path class="graph-line" d="${path(temp)}" stroke="#7ee787"></path><path class="graph-line" d="${path(humidity)}" stroke="#5ee7d0"></path>`;if(temp.length){const i=temp.length-1,x=pad.left+(i/Math.max(1,count-1))*innerWidth,y=graphY(temp[i],minValue,maxValue,height,pad);svg+=`<circle class="graph-dot" cx="${x}" cy="${y}" r="4" fill="#7ee787"></circle><text class="graph-value" x="${width-pad.right}" y="16" text-anchor="end">T ${temp[i].toFixed(1)}°C</text>`;}if(humidity.length){const i=humidity.length-1,x=pad.left+(i/Math.max(1,count-1))*innerWidth,y=graphY(humidity[i],minValue,maxValue,height,pad);svg+=`<circle class="graph-dot" cx="${x}" cy="${y}" r="4" fill="#5ee7d0"></circle><text class="graph-label" x="${width-pad.right}" y="31" text-anchor="end">H ${humidity[i].toFixed(1)}%</text>`;}if(labels.length){svg+=`<text class="graph-label" x="${pad.left}" y="${height-10}">${labels[0]||''}</text><text class="graph-label" x="${width-pad.right}" y="${height-10}" text-anchor="end">${labels[labels.length-1]||''}</text>`;}box.innerHTML=svg+'</svg>';}
-function updateCharts(){renderSingleGraph('temperatureChart',temperatureData,labels,'#7ee787','°C',false);renderSingleGraph('humidityChart',humidityData,labels,'#5ee7d0','%',true);renderSingleGraph('soilChart',soilData,labels,'#b6d96c','RAW',true);renderSingleGraph('waterChart',waterData,labels,'#62b8ff','cm',true);renderOverviewGraph();}
+
+Chart.defaults.color = "#7f8d87";
+Chart.defaults.borderColor = "rgba(255,255,255,.06)";
+Chart.defaults.font.family = "Segoe UI, Arial, sans-serif";
+Chart.defaults.font.size = 9;
+
+
+/* =========================================================
+   CHART CREATOR
+========================================================= */
+
+function createChart(
+    canvasId,
+    label,
+    data,
+    color,
+    beginAtZero = false
+){
+
+    const canvas = document.getElementById(canvasId);
+
+    if(!canvas){
+        return null;
+    }
+
+    return new Chart(
+        canvas.getContext("2d"),
+        {
+            type:"line",
+
+            data:{
+                labels:labels,
+
+                datasets:[
+                    {
+                        label:label,
+                        data:data,
+
+                        borderColor:color,
+
+                        backgroundColor:"rgba(126,231,135,.06)",
+
+                        borderWidth:2,
+
+                        pointRadius:3,
+
+                        pointHoverRadius:6,
+
+                        pointHitRadius:10,
+
+                        tension:0,
+
+                        fill:true
+                    }
+                ]
+            },
+
+            options:{
+                responsive:true,
+
+                maintainAspectRatio:false,
+
+                animation:{
+                    duration:250
+                },
+
+                plugins:{
+                    legend:{
+                        display:false
+                    },
+
+                    tooltip:{
+                        mode:"index",
+                        intersect:false
+                    }
+                },
+
+                scales:{
+                    x:{
+                        grid:{
+                            display:false
+                        },
+
+                        ticks:{
+                            maxTicksLimit:7,
+                            color:"#64716c"
+                        }
+                    },
+
+                    y:{
+                        beginAtZero:beginAtZero,
+
+                        grid:{
+                            color:"rgba(255,255,255,.05)"
+                        },
+
+                        ticks:{
+                            color:"#64716c"
+                        }
+                    }
+                }
+            }
+        }
+    );
+}
+
+
+/* =========================================================
+   CREATE ALL 5 CHARTS
+========================================================= */
+
+let temperatureChart =
+    createChart(
+        "temperatureChart",
+        "Temperature",
+        temperatureData,
+        "#7ee787"
+    );
+
+
+let humidityChart =
+    createChart(
+        "humidityChart",
+        "Humidity",
+        humidityData,
+        "#5ee7d0",
+        true
+    );
+
+
+let soilChart =
+    createChart(
+        "soilChart",
+        "Soil Moisture",
+        soilData,
+        "#b6d96c",
+        true
+    );
+
+
+let waterChart =
+    createChart(
+        "waterChart",
+        "Water Distance",
+        waterData,
+        "#62b8ff",
+        true
+    );
+
+
+let overviewChart = null;
+
+const overviewCanvas =
+    document.getElementById("overviewChart");
+
+
+if(overviewCanvas){
+
+    overviewChart =
+        new Chart(
+            overviewCanvas.getContext("2d"),
+            {
+                type:"line",
+
+                data:{
+                    labels:labels,
+
+                    datasets:[
+                        {
+                            label:"Temperature",
+                            data:temperatureData,
+                            borderColor:"#7ee787",
+                            borderWidth:2,
+                            pointRadius:3,
+                            pointHoverRadius:6,
+                            pointHitRadius:10,
+                            tension:0
+                        },
+
+                        {
+                            label:"Humidity",
+                            data:humidityData,
+                            borderColor:"#5ee7d0",
+                            borderWidth:2,
+                            pointRadius:3,
+                            pointHoverRadius:6,
+                            pointHitRadius:10,
+                            tension:0
+                        }
+                    ]
+                },
+
+                options:{
+                    responsive:true,
+                    maintainAspectRatio:false,
+
+                    animation:{
+                        duration:250
+                    },
+
+                    plugins:{
+                        legend:{
+                            display:true,
+
+                            labels:{
+                                boxWidth:10,
+                                usePointStyle:true
+                            }
+                        },
+
+                        tooltip:{
+                            mode:"index",
+                            intersect:false
+                        }
+                    },
+
+                    scales:{
+                        x:{
+                            grid:{
+                                display:false
+                            }
+                        },
+
+                        y:{
+                            grid:{
+                                color:"rgba(255,255,255,.05)"
+                            }
+                        }
+                    }
+                }
+            }
+        );
+}
+
+
+/* =========================================================
+   UPDATE CHARTS
+========================================================= */
+
+function updateCharts(){
+
+    if(temperatureChart){
+        temperatureChart.update("none");
+    }
+
+    if(humidityChart){
+        humidityChart.update("none");
+    }
+
+    if(soilChart){
+        soilChart.update("none");
+    }
+
+    if(waterChart){
+        waterChart.update("none");
+    }
+
+    if(overviewChart){
+        overviewChart.update("none");
+    }
+}
+
 
 /* =========================================================
    NUMBER HELPERS
 ========================================================= */
-
-
 
 function safeNumber(value, fallback = 0){
 
@@ -2546,6 +2854,8 @@ function updateFarmUI(data){
         pump
     );
 
+
+    updateFeatureCenter(data);
 }
 
 
@@ -3180,10 +3490,11 @@ loadData();
    LIVE REFRESH
 ========================================================= */
 
-setInterval(
-    loadData,
-    3000
-);
+featureRefreshTimer = setInterval(function(){
+    if(featureRefreshEnabled){
+        loadData();
+    }
+},3000);
 
 </script>
 
